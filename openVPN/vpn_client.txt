@@ -1,0 +1,30 @@
+参考：ClientをCUIで接続|https://lab4ict.com/system/archives/4762
+
+Client側がUbuntuの場合はGUIで接続した方が安定する？
+
+
+# OpenVPNとeasy-rsaのインストール
+$ sudo apt install openvpn easy-rsa
+
+# VPN接続の開始
+VPNサーバから「クライアント名.conf」を受け取る
+confファイルのディレクトリに移動し，「tmux」環境などで以下を実行する
+    $ sudo openvpn クライアント名.conf
+「ip a」などで接続確認（tun0）が追加されていればOK
+
+################################
+「nopass」にして作った「.conf」ファイルを「/etc/openvpn/client/」に移動
+その後、「systemctl」によって接続と自動起動を設定する
+# systemctlを使用して，OpenVPNによるVPN接続を行う
+$ sudo systemctl start openvpn-client@クライアント名.service
+
+# マシン起動時に自動起動させることもできる
+$ sudo systemctl enable openvpn-client@クライアント名.service
+
+
+################################
+## VirtualBoxで立ち上げた場合 ##
+################################
+# ネットワーク設定を変更する
+ブリッジアダプターに変更することで、ホストと同じネットワークのIPアドレスが与えられる
+この状態で、通常と同じ手順を踏んで、VPNクライアントを動作させる

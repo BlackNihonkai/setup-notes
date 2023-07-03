@@ -1,0 +1,40 @@
+#################
+## OpenSSL更新 ##
+#################
+
+# 事前準備
+乱数生成用のファイルを準備
+    200KB程度のファイルを用意する
+    randfile1.txt, randfile2.txt, randfile3.txtとする
+
+サーバDNの確認
+    Country : C=JP
+    State or Province Name : ST=Osaka
+    Locality Name : L=Suita
+    Organization Name : O=Kansai Univercity
+    Common Name :（例）al.kansai-u.ac.jp
+
+
+# 鍵ペアの生成
+乱数生成用のファイルを作業ディレクトリに移動させる
+    $ mv randfile1.txt randfile2.txt randfile3.txt /path/to/dir
+
+作業ディレクトリに移動し、鍵ペアの作成
+    $ cd /path/to/dir
+    $ openssl genrsa des3 -rand randfile1.txt randfile2.txt randfile3.txt 2048 > ServerName.key
+        「Enter pass phrase」を聞かれたときには、何らかのPassPhraseを入力して、近くに記録しておく
+
+
+# CSRファイルの生成
+PassPhrase入力後、DN情報を入力する
+    OepnSSLでは、必要でない（管理者から入力の指示が出ていない）項目は「.」を入力することで省略できる
+    $ openssl req -new -key ServerName.key -sha256 -out ServerName.csr
+
+CSRファイルの確認
+    $ openssl req -noout -text -in ServerName.csr
+        DN情報（特にCN=URL）が正しいことを確認（４行目付近）
+            Subject: C=JP,L=Suita,ST=Osaka,O=Kansai Univercity,CN=al.kansai-u.ac.jp
+        鍵の長さが2048bitであることを確認（７行目付近）
+            Public Key:(2048bit)
+        署名アルゴリズムの確認
+            Signature Algorithm: sha256WithRSAEncryption

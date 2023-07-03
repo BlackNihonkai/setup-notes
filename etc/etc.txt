@@ -1,0 +1,112 @@
+#########
+test#
+#########
+
+######################
+## ディレクトリ関連 ##
+######################
+
+# 日本語のディレクトリを英語名に変更
+ssh環境ではなくGUIが見れる状態で実行
+    $ LANG=C xdg-user-dirs-gtk-update
+
+# ディレクトリの監視と同期
+例)ディレクトリAの変更を監視し、変更があればディレクトリBに同期
+inotify-toolsのインストール
+    $ sudo apt-get install inotify-tools
+監視を行うディレクトリを指定するスクリプトを実行(tmux で実行？)
+    #!/bin/bash
+    while true; do
+        inotifywait -r -e modify,create,delete /path/to/directoryA/
+        rsync -av --delete /path/to/directoryA/ /path/to/directoryB/
+    done
+
+
+########################
+## グローバルIPの取得 ##
+########################
+
+$ curl ifconfig.io
+
+
+###################
+## sshの初期設定 ##
+###################
+
+# OpenSSH Serverのインストール
+$ sudo apt update
+$ sudo apt install openssh-server
+
+# SSH Serverの実行
+SSHをインストールすると自動で実行される
+systemctlのステータスを確認することで実行されているかを確かめる
+    $ sudo systemctl status ssh
+手動では以下
+    $ sudo systemctl start ssh
+
+# 自動起動
+マシンを再起動してもSSHが自動で起動されるように設定しておくと良い
+    $ sudo systemctl enable ssh
+
+# ssh-keygen
+[普段]ホスト鍵を削除する
+    $ ssh-keygen -R example.com
+
+
+###############
+## ssh公開鍵 ##
+###############
+
+# 秘密鍵と公開鍵のペアを作成する
+$ ssh-keygen -t rsa
+
+# リモートへ公開鍵を転送する
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub [リモートのユーザ名]@[リモートのIP]
+
+# パスワードなしでログインできるか試しておく
+
+
+##############
+## IPの固定 ##
+##############
+参考：https://zenn.dev/0vx3158/articles/ad82a90e2783cd
+# 設定ファイルの場所
+ローカルIPに関する設定ファイルは「/etc/netplan/」内に存在する
+    $ cd /etc/netplan/
+# 設定ファイルの編集
+設定ファイルのバックアップを取っておく
+設定ファイル名が「01-network-manager-all.yaml」の場合
+    $ sudo cp 01-network-manager-all.yaml 01-network-manager-all.yaml.backup
+「nano」や「vi」などで「01-network-manager-all.yaml」を編集する
+    $ sudo nano 01-network-manager-all.yaml
+# 設定の反映
+$ sudo netplan apply
+
+# テンプレート
+このファイルと同じディレクトリにテンプレートを用意（「IP_kotei.yaml」）
+テンプレートの中身をコピペして，一部（２か所？）を編集する
+* 研究室内での利用であれば，「addresses: [192.168.11.0/24]」のアドレスを変更する
+* ネットワークインターフェスを記載した「eth0」の部分ははマシンによって異なるため，「ip a」コマンドなどで確認する必要がある
+    例えば以下のように確認し，この例では設定ファイルの「eth0:」を「enp0s3:」に書き換える
+    $ ip -4 a
+    1: lo:  mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+        inet 127.0.0.1/8 scope host lo
+            valid_lft forever preferred_lft forever
+    2: enp0s3:  mtu 1500 qdisc fq_codel state UP group default qlen 1000
+        inet 192.168.1.5/24 brd 192.168.1.255 scope global enp0s3
+            valid_lft forever preferred_lft forever
+
+************
+** 注意！ **
+************
+インデントの関係を崩すとエラーとなる
+
+
+######################
+## ファイアウォール ##
+######################
+ファイアウォールを使用している場合は，sshの許可をする
+    $ sudo ufw allow ssh
+    または
+    $ sudo ufw allow 22
+

@@ -1,0 +1,28 @@
+###########################
+## GitHubにSSHでPushする ##
+###########################
+
+# 公開鍵と秘密鍵を作成する
+鍵を入れるフォルダに移動する
+    $ cd ~/.ssh
+鍵を生成する
+    $ ssh-keygen -t rsa
+    ３つほど質問をされるので、原則として、Enterキーを押せばよい
+    「id_rsa」と「id_rsa.pub」の二つの鍵が生成する
+        ※すでにid_rsaが存在する場合は上書きされるので注意
+        違う名前で生成する場合には、一つ目の質問で名前を入力する
+
+# 公開鍵をGitHubにアップロードする
+Setting下のsshの項目で公開鍵の設定を行う
+    Add an SSH keyのところで設定が可能
+        「id_rsa.pub」の中身をコピペする
+
+# 接続の確認
+$ ssh -T git@github.com
+    以下のように返ってきたら接続できている
+        「Hi アカウント名! You've successfully authenticated, but GitHub does not provide shell access.」
+リポジトリでも確認しておく
+    リポジトリのディレクトリに入って以下のコマンドを実行
+        $ git config remote.origin.url
+        以下のように返ってきたらOK
+            https://github.com/ユーザ名/リポジトリ.git

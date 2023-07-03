@@ -1,0 +1,105 @@
+##########
+## 注意 ##
+##########
+
+# SUDO
+dockerグループを作成してユーザを登録している場合は、sudoは不要
+
+
+################
+## dockerfile ##
+################
+
+# dockerfileの作成
+# dockerfileからイメージを作成
+$ sudo docker image build -t イメージ名 dockerfileのディレクトリパス
+    $ sudo docker image build -t my_image /path/to/dir
+$ docker build -t my_image /path/to/dir
+
+
+####################
+## Dockerデーモン ##
+####################
+
+# 起動
+$ sudo service docker start
+
+# 停止
+$ sudo service docker stop
+
+# 再起動
+$ sudo service docker restart
+
+
+####################
+## Dockerイメージ ##
+####################
+
+# イメージの取得
+目的に応じて取得する
+    $ docker pull コンテナ名
+        例)$ sudo docker pull ubuntu
+
+# イメージの確認
+取得したイメージはimagesで取得できる
+    $ sudo docker images
+
+# イメージの削除
+利用しなくなったイメージを削除できる
+    $ sudo docker rmi イメージID
+現在は以下のコマンドでも削除できる
+    $ sudo docker image rm イマージID
+
+
+####################
+## Dockerコンテナ ##
+####################
+
+# ホストとの間のファイルコピー
+コンテナ->ホスト
+    $ sudo docker cp コンテナID:/path/to/file.cnf /path/to/dir
+ホスト->コンテナ
+    $ sudo docker cp /path/to/file.cnf コンテナID:/path/to/dir
+
+# コンテナの確認
+動いているコンテナのみ
+    $ sudo docker ps
+全てのコンテナの確認
+    停止中のコンテナも表示される
+        $ sudo docker ps -a
+コンテナのリソース使用状況
+    $ sudo docker stats
+        「status」ではなく「stats」なので、注意
+
+# コンテナの削除
+$ sudo docker rm [コンテナ名 or コンテナID]
+
+
+# 起動
+コンテナの起動
+    $ sudo docker run -itd --name コンテナ名 イメージ名
+$ docker run -itd イメージ名
+    これで起動した場合はランダムなコンテナ名がつけられる
+最後に「/bin/bash」などのシェルを指定することもできる
+
+# 接続とログイン
+attach
+    コンテナ内でシェルが動作していなければならない
+    コンテナのシェルの標準入出力に接続する
+        $ sudo docker attach [コンテナ名 or コンテナID]
+    コンテナから抜けるには
+        exit：プロセスが終了し、コンテナも終了する
+        Ctrl+p->Ctrl+q：コンテナを起動したまま操作だけやめる
+exec
+    稼働しているコンテナであれば、コンテナ内でシェルが動作している必要はない
+        $ sudo docker exec -it コンテナ名 /bin/bash
+            シェルを指定しないとエラー
+    コンテナから抜けるには
+        exit：コンテナは停止しない
+
+# 停止
+$ sudo docker stop [コンテナ名 or コンテナID]
+
+# 停止中のコンテナの起動
+$ sudo docker start [コンテナ名 or コンテナID]
+

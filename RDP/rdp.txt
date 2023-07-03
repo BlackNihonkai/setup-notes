@@ -1,0 +1,60 @@
+#########
+## RDP ##
+#########
+参考：https://qiita.com/HirMtsd/items/bea92de2283c8aed5d2d
+
+# RDPのインストール状況を確認
+$ apt list | grep xrdp
+「[インストール済み]」と表示されているかを確認する
+
+# RDPのインストール
+xrdpがインストールされていない場合はインストール
+    $ sudo apt install xserver-xorg-core xorgxrdp xrdp
+# シェルスクリプトの実行
+以下のスクリプトを実行または、.shのファイルとして実行
+cat <<EOF > ~/.xsessionrc
+export GNOME_SHELL_SESSION_MODE=ubuntu
+export XDG_CURRENT_DESKTOP=ubuntu:GNOME
+export XDG_DATA_DIRS=/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+export XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+EOF
+sudo sed -e 's/^new_cursors=true/new_cursors=false/g' -i /etc/xrdp/xrdp.ini
+
+cat <<EOF | \
+sudo tee /etc/polkit-1/localauthority/50-local.d/xrdp-color-manager.pkla
+[Netowrkmanager]
+Identity=unix-user:*
+Action=org.freedesktop.color-manager.create-device
+ResultAny=no
+ResultInactive=no
+ResultActive=yes
+EOF
+
+sudo systemctl restart xrdp
+sudo systemctl restart polkit
+
+# カラープロファイル関連の警告を減らす
+/etc/polkit-1/localauthority.conf.d/02-allow-colord.confの削除
+    $ sudo rm /etc/polkit-1/localauthority.conf.d/02-allow-colord.conf
+ファイルの作成
+    $ sudo nano /etc/polkit-1/localauthority/50-local.d/45-allow-colord.pkla
+    内容は以下の通り
+        [Allow Colord all Users]
+        Identity=unix-user:*
+        Action=org.freedesktop.color-manager.create-device;org.freedesktop.color-manager.create-profile;org.freedesktop.color-manager.delete-device;org.freedesktop.color-manager.delete-profile;org.freedesktop.color-manager.modify-device;org.freedesktop.color-manager.modify-profile
+        ResultAny=no
+        ResultInactive=no
+        ResultActive=yes
+サービスの再起動
+$ sudo systemctl restart polkit.service
+
+# RDPの有効化
+xrdpのサービスが設定されていることを確認
+    $ systemctl -a | grep xrdp
+「systemctl」で有効化し自動起動設定もしておく
+    $ sudo systemctl start xrdp
+    $ sudo systemctl enable xrdp
+************
+** 注意！ **
+************
+いかなる方法であってもログインしているユーザが存在する場合には，RDPによる接続ができない

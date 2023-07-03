@@ -1,0 +1,9 @@
+###########
+## nginx ##
+###########
+
+# Nginxのインストール
+aptでインストールできる
+    $ sudo apt install -y nginx
+
+# Nginxの操作

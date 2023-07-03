@@ -1,0 +1,27 @@
+########################
+## nanoの設定ファイル ##
+########################
+
+# 設定ファイルのディレクトリ
+「/etc/」の下に存在する
+    /etc/nanorc
+
+# 重要な設定項目
+set linenumbers
+    左端に行番号を表示
+set softwrap
+    行の折り返しを有効化
+set tabsize 8
+    タブサイズを設定
+set tabstospaces
+    入力されたタブを空白に展開
+
+# 各種設定項目(その他)
+set atblanks
+    行の折り返しが有効になっている場合、タブや空白の場所で改行
+set autoindent
+    オートインデント
+set nonewlines
+    ファイルの末尾に改行を追加しない
+set trimblanks
+    折り返し時に行末に空白を挿入しない

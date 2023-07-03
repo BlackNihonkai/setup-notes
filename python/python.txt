@@ -1,0 +1,17 @@
+##########################
+## Pythonのインストール ##
+##########################
+
+# apt
+sudo apt-get install python3
+
+
+#########
+## pip ##
+#########
+
+# OpenCV
+基本的には以下の一文
+    $ sudo apt-get install opencv-python
+Docker環境では、以下の一文も必要である場合が多い
+    $ sudo apt-get install libgl1-mesa-dev

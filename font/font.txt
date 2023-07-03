@@ -1,0 +1,15 @@
+############################
+## フォントをインストール ##
+############################
+
+matplotlibにフォントが存在しないと警告されるとき
+    例えば、「findfont: Font family 'Noto Serif CJK JP' not found.」
+
+# aptによるフォントのインストール
+aptを使ってフォントをインストールする
+例として、「Noto Serif CJK JP」をインストールしてみる
+    $ sudo apt-get install fonts-noto-cjk
+フォントのキャッシュを更新する
+    Ubuntuであれば、「~/.cache/matplotlib/」に「fontlist-v300.json」や「fontlist-v330.json」といったファイルが存在する
+    これを削除する
+        $ sudo rm ~/.cache/matplotlib/fontlist-v300.json

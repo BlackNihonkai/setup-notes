@@ -1,0 +1,98 @@
+################
+## Client追加 ##
+################
+
+# Client用の秘密鍵発行
+easy-rsaをインストールしたディレクトリに移動して，「easyrsa」コマンドを用いることでClient秘密鍵を発行する
+ただし、「nopass」はなくても良い
+    $ cd /xxx/xxx/easyrsa
+    $ sudo ./easyrsa build-client-full client名 nopass
+
+# それぞれのファイルを見ながら「client名.conf」（client名.ovpn）を作成する
+それぞれのファイルは以下の格納場所に存在する
+|--------------|----------------|
+|   ファイル   |    格納場所    |
+|--------------|----------------|
+|    ca.crt    |     ./pki/     |
+| client名.key | ./pki/private/ |
+| client名.crt | ./pki/issued/  |
+|    ta.key    |   ../easyrsa/  |
+|--------------|----------------|
+
+
+######################
+## フォワーディング ##
+######################
+
+# 共通の操作
+iptablesの設定(Serverでの操作)
+    以下はroot環境
+    $ sudo iptables -A FORWARD -d 10.8.0.0/24 -p all -o tun0 -j ACCEPT
+    $ sudo iptables -A FORWARD -s 10.8.0.0/24 -p all -i tun0 -j ACCEPT
+
+
+# 一部のクライアントだけforwardする場合
+クライアントの「/etc/openvpn/client/client.conf」の編集
+    どこかに以下の2行を追記
+        dhcp-option DNS 8.8.8.8
+        redirect-gateway def1 bypass-dhcp
+
+「ip route」コマンドによるLANの設定(Clientでの操作)
+    $ sudo ip route add <該当ネットワーク>/24 via <所属LANのルータIP> dev <自身のnetwork-interface>
+        例)192.168.11.0に属するコンピュータが19.168.11.0に属するコンピュータとの通信したい場合
+            $ sudo ip route add 192.168.11.0/24 via 192.168.11.1 dev enp3s0
+    「$ ip route」で設定ができているか、確認しておく
+            
+
+# 全てのクライアントをforwardする場合
+「/etc/openvpn/server.conf」の編集
+    200行目付近の以下の二行がコメントアウトされているので、それを解除する
+        push "redirect-gateway def1 bypass-dhcp"
+        push "dhcp-option DNS 8.8.8.8"
+    DNSサーバのIPは「8.8.8.8」以外が書かれている場合もある
+        その時は変更を行っておく
+
+
+#####################
+## VPNサーバの起動 ##
+#####################
+
+$ sudo systemctl start openvpn@server.service
+$ sudo systemctl status openvpn@server.service
+以下のように警告が出るまで待つ
+    Password entry required for 'Enter Private Key Password:' (PID 894).
+    Please enter password with the systemd-tty-ask-password-agent tool.
+    その後以下のように入力して，CAのパスワードを入力する．
+    $ sudo systemd-tty-ask-password-agent --query
+
+##########################
+## サーバ機の再起動手順 ##
+##########################
+# VPNサーバの停止
+VPNサーバのステータス確認
+    $ sudo systemctl status openvpn@server.service
+VPNサーバの停止
+    $ sudo systemctl stop openvpn@server.service
+VPNサーバの停止確認（ステータス確認）
+    $ sudo systemctl status openvpn@server.service
+
+# サーバ機の再起動
+$ sudo shutdown -r now
+
+## サーバの起動後に，各サービス立ち上げ
+VPNサーバの起動
+    自動で立ち上がり，「sudo systemd-tty-ask-password-agent --query」による，CAパスワードの入力を求められる．
+    上記のコマンドを打ち込み，Private Key Passwordを入力する
+VPNサーバの起動確認（ステータス確認）
+    $ sudo systemctl status openvpn@server.service
+必要であればSambaの立ち上げ確認
+    $ sudo systemctl status smbd nmbd
+
+##########
+## 参考 ##
+##########
+openvpn構築|https://tryota.hatenablog.com/entry/2021/04/11/Ubuntu_Server_で_OpenVPNサーバ
+↑リンク切れ
+client 追加など
+https://zenn.dev/root134/articles/0dbef6d128bd62
+https://qiita.com/SSMU3/items/bf82f76af9534b21da8c

@@ -1,0 +1,19 @@
+###########################
+## CudnnをDockerで動かす ##
+###########################
+
+# Nvidia-smi
+Nvidia–smiiはできるようにしておく
+
+# Nvidia Container Toolkit
+Nvidia Container Toolkitをインストール
+
+# DockerでGPUを使う
+イメージをpull
+    $ sudo docker pull nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+        pullコマンドは以下のURLからCudaとCudnnのバージョンを確認し、それに適したpullコマンドをコピペする
+            ・CudaとCudnnのバージョン(GPUの表を確認)：https://www.tensorflow.org/install/source?hl=ja#common_installation_problems
+            ・pullコマンド(「Filter Tags」の検索欄から探す)：https://hub.docker.com/r/nvidia/cuda/tags?page=1
+Docker上でNvidiaドライバが認識されていればOK
+    $ docker run --gpus all nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04 nvidia-smi
+        イメージをpullしたときと同様にバージョンに注意

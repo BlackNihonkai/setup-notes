@@ -1,0 +1,196 @@
+Ubuntu上に環境を構築するための個人的なメモ書き。使うコマンドや手順などを書いてある。
+==========
+################
+## 最初の心得 ##
+################
+アプリケーションのインストールは、基本的にシステムを最新の状態にしてから実行すること。
+sudo apt update
+sudo apt upgrade
+
+==========
+# KDEインストール
+sudo apt install -y kubuntu-desktop
+
+==========
+# Xfce インストール
+# 2020/09/14 追記: 18.04ではXfce4を使っていると何かとフリーズするようになった
+sudo apt install -y xubuntu-desktop
+
+==========
+# ディスプレイマネージャの変更 
+# (以下は一例。末尾のディスプレイマネージャ名はインストールされているものならなんでもいい)
+sudo dpkg-reconfigure gdm3
+
+==========
+# ユーザーフォルダ日本語に
+LANG=C xdg-user-dirs-gtk-update
+
+==========
+# 日本語入力ソフトfcitxの導入
+sudo apt install -y fcitx-mozc
+sudo apt purge ibus -y	# iBusを削除
+
+# 入力メソッドをMozcだけにする ("キーボード - 日本語" と共に使用した場合、PyCharmで正常に動作しない)
+
+## 必要?
+# im-configでfcitxをデフォルトに設定する
+# 再起動 (またはログオフ?) する
+
+==========
+# Shift+Ctrl+Esc でGNOMEシステムモニターを開くショートカットの追加
+# ウィンドウフォーカス遷移のためのプログラムをインストール
+sudo apt install wmctrl
+# デスクトップ環境のショートカットに以下コマンドを登録
+wmctrl -x -a gnome-system-monitor; gnome-system-monitor
+
+==========
+# F10でメニューバーを開かないようにする
+gsettings set org.gnome.desktop.interface menubar-accel ''
+
+==========
+# Gnome-Terminal のプロファイルを確認
+dconf dump /org/gnome/terminal/legacy/profiles:/
+# Gnome-Terminal のプロファイルをエクスポート
+dconf dump /org/gnome/terminal/legacy/profiles:/:<プロファイルID>/ > gnome-terminal-profile.dconf
+
+# インポート
+# 最初にインポート先となる空のプロファイルをGUI上で作っておく
+# コマンドでインポート
+dconf load /org/gnome/terminal/legacy/profiles:/:<プロファイルID>/ < <dconfファイルパス>
+
+==========
+# ファイルマネージャ Dolphin のインストール
+# 注意: KDE Desktop をインストールした場合自動的にインストールされる
+
+==========
+# ファイルマネージャ Caja のインストール
+sudo apt install -y caja caja-open-terminal
+# caja.desktop を ~/.local/share/applications にコピー
+
+==========
+# ファイルマネージャNemoのインストール + 大量のファイルを閲覧すると重くなる問題を解決 (効果未確認)
+sudo apt install -y nemo ffmpegthumbnailer
+cd /usr/share/thumbnailers
+sudo cp totem.thumbnailer totem.thumbnailer.old
+sudo gedit totem.thumbnailer
+
+# 初めの2行を次に変更
+TryExec=/usr/bin/ffmpegthumbnailer
+Exec=/usr/bin/ffmpegthumbnailer -s %s -i %i -o %o -c png -f
+
+# Nemoを再起動
+
+==========
+# テキストエディタGeany
+sudo apt install -y geany
+
+==========
+# chrome
+## 
+# 公式サイトから .deb をダウンロードしてきてインストール
+
+==========
+# Python インストール
+# (20.04では最初から3.8が入っている)
+sudo apt install -y python3.8
+sudo ln -fs /usr/bin/python3.8 /usr/local/bin/py
+sudo ln -fs /usr/bin/python3.8 /bin/py
+# pipはget_pip.pyを使ってインストールする
+# 20.04以降
+sudo apt install -y python3-pip
+
+==========
+Tkのインストール
+sudo apt-get install python3-tk tk-dev
+
+==========
+# Pycharm
+sudo snap install pycharm-community --classic
+
+==========
+# Nvidia ドライバインストール
+## 1. nouveau を無効化
+sudo -s
+echo "blacklist nouveau
+options nouveau modeset=0" > /etc/modprobe.d/blacklist-nouveau.conf
+sudo update-initramfs -u
+
+## 2. nouveau 無効化確認 (しなくてもいい)
+lsmod | grep -i nouveau
+
+## 3. 推奨バージョンを確認
+ubuntu-drivers devices
+
+## 4. インストール
+apt install -y nvidia-driver-440
+
+==========
+# CUDA インストール
+# 導入するTensorFlowのバージョンに対応したものをインストールすること。
+# 例: TensorFlow 2.3.0 => CUDA 10.1 & cuDNN 7.* (7.6以降)
+# 方法1: 公式サイトに従ってインストーラをダウンロード、インストールする
+# ダウンロード後の実行例:
+sudo bash cuda_11.3.1_465.19.01_linux.run
+# 方法2: 20.04以降(インストールできるバージョンが限定されてしまうため非推奨)
+sudo apt install -y nvidia-cuda-toolkit
+
+# CUDAのパスを登録
+# 以下の行を ~/.bashrc に追加する (方法1の場合)
+export CUDA_HOME="/usr/local/cuda"
+export PATH="${CUDA_HOME}/bin:$PATH"
+export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:$LD_LIBRARY_PATH"
+# 方法2の場合、CUDAのインストール先が異なるのでそれに対応したパスを設定する
+export CUDA_HOME="/usr/lib/cuda"
+export PATH="${CUDA_HOME}/bin:$PATH"
+export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:$LD_LIBRARY_PATH"
+
+# cuDNNのインストール
+## 1. 公式サイトからcuDNNのライブラリライブラリファイルをダウンロード (NVIDIAアカウントが必要)
+## 2. ダウンロードした圧縮ファイルを展開 ('cuda' フォルダ)
+## 3. ファイルを cuda のインストール先フォルダにコピーする
+cd cuda
+sudo cp include/cudnn* ${CUDA_HOME}/include/
+sudo cp lib64/libcudnn* ${CUDA_HOME}/lib64/
+
+==========
+# GPUのファン制御
+## 1. ファイル /etc/X11/xorg.conf を管理者権限で編集。ファイルが存在しない、または空の場合は最初に以下を実行する。
+sudo nvidia-xconfig -a
+## 2. Section "Device" と書かれたブロックのうち該当GPUと思われるものを探す。
+## 3. Option "Coolbits" "12"を追加 (4,5,12のどれでもよい)。一例:
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce GTX 1060 6GB"
+    Option "Coolbits" "12"
+EndSection
+## 4. gpufan_control.sh をローカルフォルダに保存し、実行する
+bash gpufan_control.sh
+# メモ: Ubuntu で gpufan_control.sh 中にCPU温度も表示したい場合は lm-sensors もインストールする。
+
+==========
+# Concorde のインストール
+## 1. ソースコードの圧縮ファイルをダウンロードしてくる (例: co031219.tar)
+## 2. コンパイルの実行
+INSTALL_DST=/opt
+sudo tar xvf co031219.tar -C ${INSTALL_DST}
+sudo mkdir ${INSTALL_DST}/concorde_build
+cd ${INSTALL_DST}/concorde_build
+sudo ../concorde/configure
+sudo make
+sudo rm -R ${INSTALL_DST}/concorde
+# シンボリックリンクの作成
+sudo ln -sf ${INSTALL_DST}/concorde_build/TSP/concorde /usr/local/bin/concorde
+sudo ln -sf ${INSTALL_DST}/concorde_build/TSP/concorde /usr/bin/concorde
+
+# 実行ファイル版
+INSTALL_DST=/opt
+gzip -dk concorde.gz
+sudo mkdir ${INSTALL_DST}/concorde
+sudo cp concorde ${INSTALL_DST}/concorde/
+sudo chmod 777 ${INSTALL_DST}/concorde/concorde
+# シンボリックリンクの作成
+sudo ln -sf ${INSTALL_DST}/concorde/concorde /usr/local/bin/concorde
+sudo ln -sf ${INSTALL_DST}/concorde/concorde /usr/bin/concorde
+

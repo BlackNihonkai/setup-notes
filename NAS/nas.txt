@@ -1,0 +1,39 @@
+##########################
+## samba のインストール ##
+##########################
+
+# インストール
+    $ sudo apt install samba
+# ユーザ登録
+    $ sudo pdbedit -a ユーザ名
+
+##################
+## samba の設定 ##
+##################
+
+# smb.conf を編集
+sambaの設定ファイルは「/etc/samba/」に生成される
+「smb.conf」のバックアップを取ってから編集する
+    $ sudo nano /etc/samba/smb.conf
+
+以下のようなものをファイルの最後尾に追加する
+*「[share]」と書けばファイルサーバに「share」と表示される
+[share]
+path = /media/Toshiba
+writeable = yes
+guest ok = yes
+guest only = yes
+create mode = 0777
+directory mode = 0777
+
+# 構文チェック
+$ testparm
+    Loaded services file OK. と出れば問題なし
+
+##################
+## samba の実行 ##
+##################
+# smb.conf の設定を反映
+$ sudo systemctl restart smbd nmbd
+# Ubuntu の起動時に自動実行
+$ sudo systemctl enable smbd nmbd

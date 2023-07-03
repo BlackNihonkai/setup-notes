@@ -1,0 +1,81 @@
+################
+## XKBとLevel ##
+################
+
+# XKB
+正式名称は「X KeyBoard Extension」
+X Window Systemの一部で、キーボードの修飾キーとの組み合わせ動作や、
+キーグループによる動作切り替えなどを柔軟に設定できる
+
+# Level
+Level 1 : 1のキーを単体で押すと「1」が表示される
+Level 2 : 1のキーをShiftと一緒に押すと「!」が表示される
+Level 3 : 1のキーを(例えば)Ctrlと一緒に押すと"なにか別の記号"が表示される
+
+などのように呼ぶ
+
+
+#########################
+## XKBの状態を把握する ##
+#########################
+
+# ディレクトリとファイル
+「/usr/share/X11/xkb/」に存在する（これはUbuntuの場合でOSによっては異なることもあるらしい）
+「current.xkb」ファイルの中に様々な設定が書かれている
+
+# current.xkbの中身
+## xkb_keycodes
+「<AEO1>=10;」などのように書かれている
+「10」というkeycodeと打ち込まれたときは、「<AE01>」と呼んで設定していくという意味
+物理キーボードと実際の動作との間に入れておく
+
+## xkb_types
+「modifier」と呼ばれるものによって、Levelをどう変化させるかを定義する
+例えば「ALPHABETIC」タイプでは、ShiftおよびLock(CapsLock)で修飾した場合は
+Level2(つまり大文字)にすると設定している
+
+## xkb_symbols
+実際の出力に影響する部分
+例えば、「<AC06>」が「h」に該当するキーであったときには、「[h,H]」と書かれていて、
+「["Level 1の出力", "Level 2の出力", "Level 3の出力"]」というふうに書かれている
+
+
+#############################
+## Ctrl+hをBackSpaceにする ##
+#############################
+
+# 「h」キーのkeycodeとkeynameを確認する
+「$ xev」というふうに xev コマンドを実行して「h」キーを押下すると５行くらいの出力が返ってくる
+    ３行目くらいに存在する「keycode 43」といった表記を探す
+current.xkbのxkb_keycodesをみて、keycode=43を探す
+    「<AC06> = 43;」と表記があるはず
+    つまり、keynameは「<AC06>」
+
+# 「h」キーに対応する部分をsymbolsセクションから探す
+symbolsセクションでは一つのキーに対して４行くらい書かれている
+    「key <AC06>」内の３行目くらいに書かれている「symbols[Group1]= [        h,      H]」という
+    記述を見て、キーに間違いがないことを確認する
+
+# Level3の挙動を宣言する
+xkb_typesの中に以下のように示される部分を書き加える
+
+// newly added
+ type "PC_CONTROL_LEVEL3" {
+     modifiers= Shift+Control;
+     map[Shift]= Level2;
+     map[Control]= Level3;
+     level_name[Level1]= "Base";
+     level_name[Level2]= "Shift";
+     level_name[Level3]= "Control";
+ };
+
+# 「key <AC06>」内も書き換える
+key <AC06> {
+    type= "PC_CONTROL_LEVEL3",
+    symbols[Group1]= [h, H, BackSpace]
+};
+
+# 設定の反映
+変更した.xkbファイルを保存して、以下のコマンドで設定を反映する
+    $ xkbcomp new.xkb $DISPLAY
+このコマンドによってなされた変更は即時に反映されるため、再起動や再ログインは不要

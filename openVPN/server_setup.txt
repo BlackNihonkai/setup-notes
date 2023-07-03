@@ -1,0 +1,61 @@
+#################################
+## OpenVPNサーバのセットアップ ##
+#################################
+
+以下は「sudo」権限で実行する
+
+# パッケージのインストール
+$ sudo apt install openvpn easy-rsa
+
+# サーバ証明書の発行
+証明書発行用のディレクトリを作成
+    Ubuntuでは、専用コマンド「make-cadir」が存在するため、これを利用する
+        $ sudo make-cadir /xxx/xxx/easy-rsa
+        例えば:$ sudo make-cadir /home/username/easy-rsa
+証明書発行用のディレクトリに移動
+    $ cd /xxx/xxx/easy-rsa
+ディレクトリの配下に各種ファイルとディレクトリが生成されていることを確認
+    $ ls
+各種ドキュメントの作成
+    $ sudo ./easyrsa init-pki
+    $ sudo ./easyrsa build-ca
+    $ sudo ./easyrsa gen-dh
+    $ sudo openvpn --genkey --secret ./pki/ta.key
+    ドキュメントが作成されたことを確認
+        pki/ca.crt、pki/private/ca.key、pki/private/server.key、pki/issued/server.crt、./ta.key
+
+# サーバの鍵と証明書の作成
+サーバの鍵と証明書を生成して署名、までをコマンド一つでできる
+    $ sudo ./easyrsa build-server-full server nopass
+
+# サーバ設定(.conf)
+まずは、各種ドキュメントを移動させる
+    ($ sudo mkdir /etc/openvpn)
+    $ cd ./pki
+    $ cp ta.key ca.crt dh.pem private/server.key issued/server.crt /etc/openvpn
+サーバ設定ファイルの作成
+    すでに稼働しているOpenVPNサーバの設定ファイルを流用することもできる
+        $ scp user@ip-address:/etc/openvpn/server.conf ./
+        $ sudo mv ./server.conf /etc/openvpn/
+    以下に示すコピー元にテンプレートがあるらしい
+        $ sudo cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf /etc/openvpn
+サーバ設定ファイルを編集
+    以下は変更点
+        ca /etc/openvpn/ca.crt
+        cert /etc/openvpn/server.crt
+        key /etc/openvpn/server.key
+        dh /etc/openvpn/dh.pem
+        tls-auth /etc/openvpn/ta.key 0
+        user nobody     (コメントアウトで良いと思う)
+        group nobody    (コメントアウトで良いと思う)
+
+# 「ccd」ディレクトリを作成
+サーバの起動前に、空の「ccd」ディレクトリを作っておく
+    クライアントのIPを固定するときのために利用するディレクトリ
+    $ sudo mkdir /etc/openvpn/ccd
+
+# サーバの起動とsystemctl
+サーバの起動
+    $ sudo systemctl start openvpn@server.service
+サーバの自動起動
+    $ sudo systemctl enable openvpn@server.service

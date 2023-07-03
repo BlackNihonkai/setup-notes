@@ -1,0 +1,27 @@
+############################
+## GitLabの立ち上げと管理 ##
+############################
+
+セルフマネージドGitLabをインストール｜https://www.gitlab.jp/install/#ubuntu
+
+GitLabのURL変更方法(CentOS)｜https://j-levia.hatenablog.jp/entry/2016/11/05/214034
+
+
+##############################
+## オールインワンパッケージ ##
+##############################
+# 依存パッケージのインストールと設定
+$ sudo apt-get update
+$ sudo apt-get install -y curl openssh-server ca-certificates
+メールの通知を送信するために，Postfixをインストール
+    (別の方法でメールを送信する場合はスキップ)
+    $ sudo apt-get install -y postfix
+    $ Postfixのインストール中に設定画面が表示される．
+# GitLabパッケージのリポジトリへの追加とインストール
+GitLabパッケージをリポジトリに追加
+    $ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
+GitLabパッケージをインストール．「http://gitlab.example.com」の部分は，「localhost」でよい．
+    参照：GitLabのURL変更方法(CentOS)｜https://j-levia.hatenablog.jp/entry/2016/11/05/214034
+        $ sudo EXTERNAL_URL="https://gitlab.example.com" apt-get install gitlab-ee
+# ブラウザでログイン
+インストール時のパスワードはランダムに生成され，「/etc/gitlab/initial_root_password」に保存される．ここに記載されたパスワードとユーザ名「root」を使ってログイン．

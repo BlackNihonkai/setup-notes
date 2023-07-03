@@ -1,0 +1,50 @@
+##################
+## セットアップ ##
+##################
+
+原則として，GitHubもGitLabも操作は同じ
+参考：パソコン内のフォルダをgithubへアップロードする方法_図解付｜https://itc.tokyo/best-environment/upload-to-github/
+
+$ git init
+$ git config --global user.name "名前"
+$ git config --global user.email "アドレス"
+$ git add .
+$ git remote add origin http://...
+$ git branch -M ブランチ名
+$ git commit -m "コメント"
+$ git push origin ブランチ名
+
+
+################
+## 普段の操作 ##
+################
+
+$ git add .
+$ git commit -m "コメント"
+$ git push origin ブランチ名
+
+
+################
+## branch関係 ##
+################
+
+参考：【Git入門】ブランチ(branch)とは？メリットや使い方を解説！｜https://www.sejuku.net/blog/71071
+
+# 現在branchの確認
+$ git branch
+
+# branchの作成
+$ git branch ブランチ名
+
+# branchの切り替え
+$ git checkout ブランチ名
+ブランチの切り替えを「git branch」で確認しておくべし
+
+# branchをmasterにマージ
+branchで開発を行い，動作確認ができればmasterにマージする
+$ git merge ブランチ名
+
+# branchの削除
+「-d」オプションをつけることでブランチを削除できる
+$ git branch -d ブランチ名
+
