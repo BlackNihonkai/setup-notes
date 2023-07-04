@@ -1,0 +1,73 @@
+########################
+## tmuxのインストール ##
+########################
+
+$ sudo apt install tmux
+
+
+######################
+## セッションの操作 ##
+######################
+
+# セッションの起動
+$ tmux
+    名前付きで起動
+        $ tmux new -s 名前
+
+# セッションの終了
+セッション内で入力する
+    $ exit
+
+# セッションを一時中断する
+Detachはセッション内で入力する
+    Ctrl-b d
+Attach
+    $ tmux a
+    名前指定のセッションに戻る
+        $ tmux a -t 名前
+
+# セッションの一覧を表示
+$ tmux ls
+    以下でも良い
+        $ tmux list-sessions
+    セッション内であれば以下も使える
+        Ctrl-b s
+
+# 指定したセッションの終了
+$ tmux kill-session -t 名前
+
+
+######################
+## Windowの操作 ##
+######################
+
+# 新規Windowを作成(Create)
+Ctrl-b c
+
+# 数字で指定したWindowに移動
+Ctrl-b 数字
+
+# 次のWindowに移動(Next)
+Ctrl-b n
+
+# 前のWindowに移動(Prev)
+Ctrl-b p
+
+# 以前のWindowに移動(Last)
+Ctrl-b l
+
+# Windowの一覧を表示(Window)
+Ctrl-b w
+
+# Window名を変更
+Ctrl-b ,
+
+# Window番号を指定して移動
+Ctrl-b '
+
+# Window番号の変更
+Ctrl-b .
+
+# windowを終了(名前を指定)
+Ctrl-b &
+
