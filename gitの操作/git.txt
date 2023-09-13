@@ -35,10 +35,14 @@ $ git branch
 
 # branchの作成
 $ git branch ブランチ名
+$ git switch -c ブランチ名
 
 # branchの切り替え
-$ git checkout ブランチ名
+$ git switch ブランチ名
 ブランチの切り替えを「git branch」で確認しておくべし
+
+# 一つ前のブランチ切り替える
+$ git switch -
 
 # branchをmasterにマージ
 branchで開発を行い，動作確認ができればmasterにマージする
