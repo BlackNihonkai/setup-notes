@@ -55,10 +55,9 @@ $ ssh [接続時の名前]
 
 # パラメータ一覧
 |     Host     |  ホスト名  | 接続時に使用する名前 |
-|   HostName   | IPアドレス | ホスト名でも良い     |
-|     User     |  ユーザ名  |                      |
-|     Port     | ポート番号 | デフォルトでは22     |
+|   HostName   | IPアドレス | ホスト名でも良い    |
+|     User     |  ユーザ名  |                   |
+|     Port     | ポート番号 | デフォルトでは22    |
 | ProxyCommand | フォワード | ポートフォワード     |
 
     ProxyCommandは「ProxyCommand ssh -W %h:%p ホスト名」のように使う
-    「%p」を使う場合にはポート番号の指定を「Port」パラメータでしておく
