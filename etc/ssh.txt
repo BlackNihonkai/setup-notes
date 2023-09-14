@@ -1,0 +1,53 @@
+###################
+## sshの初期設定 ##
+###################
+
+# OpenSSH Serverのインストール
+$ sudo apt update
+$ sudo apt install openssh-server
+
+# SSH Serverの実行
+SSHをインストールすると自動で実行される
+systemctlのステータスを確認することで実行されているかを確かめる
+    $ sudo systemctl status ssh
+手動では以下
+    $ sudo systemctl start ssh
+
+# 自動起動
+マシンを再起動してもSSHが自動で起動されるように設定しておくと良い
+    $ sudo systemctl enable ssh
+
+# ssh-keygen
+[普段]ホスト鍵を削除する
+    $ ssh-keygen -R example.com
+
+
+###############
+## ssh公開鍵 ##
+###############
+
+# 秘密鍵と公開鍵のペアを作成する
+$ ssh-keygen -t rsa
+
+# リモートへ公開鍵を転送する
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub [リモートのユーザ名]@[リモートのIP]
+
+# パスワードなしでログインできるか試しておく
+
+
+################
+## ssh config ##
+################
+
+# 「config」ファイルを作成する
+「~/.ssh/」の下に「config」ファイルを作成する
+    $ cd ~/.ssh/
+    $ nano config
+
+書式は以下の通り
+    Host [ホストのIP]
+      HostName [ホストのIP]
+      User nakagawa
+
+# sshログインは以下でもできるようになる
+$ ssh [ホストのIP]
