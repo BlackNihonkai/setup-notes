@@ -1,3 +1,4 @@
+参考：https://qiita.com/shizuma/items/2b2f873a0034839e47ce
 ###########################
 ## GitHubにSSHでPushする ##
 ###########################
@@ -21,8 +22,14 @@ Setting下のsshの項目で公開鍵の設定を行う
 $ ssh -T git@github.com
     以下のように返ってきたら接続できている
         「Hi アカウント名! You've successfully authenticated, but GitHub does not provide shell access.」
-リポジトリでも確認しておく
-    リポジトリのディレクトリに入って以下のコマンドを実行
-        $ git config remote.origin.url
-        以下のように返ってきたらOK
-            https://github.com/ユーザ名/リポジトリ.git
+    この時点では、Push時にIDとパスワードを聞かれる
+
+
+# pushの設定
+リポジトリのディレクトリに入って以下のコマンドを順に実行
+    $ git config remote.origin.url
+    以下のように返ってきたらOK
+        https://github.com/ユーザ名/リポジトリ.git
+    $ git remote set-url origin git@github.com:ユーザ名/リポジトリ.git
+これで、SSHを使ったPushができるようになる
+
