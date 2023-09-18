@@ -19,8 +19,10 @@ $ sudo apt install openvpn easy-rsa
 各種ドキュメントの作成
     $ sudo ./easyrsa init-pki
     $ sudo ./easyrsa build-ca
+    $ sudo ./easyrsa gen-req server nopass
+    $ sudo ./easyrsa sign-req server server
     $ sudo ./easyrsa gen-dh
-    $ sudo openvpn --genkey --secret ./pki/ta.key
+    $ sudo openvpn --genkey secret ./pki/ta.key
     ドキュメントが作成されたことを確認
         pki/ca.crt、pki/private/ca.key、pki/private/server.key、pki/issued/server.crt、./ta.key
 
