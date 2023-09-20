@@ -16,7 +16,7 @@ easy-rsaをインストールしたディレクトリに移動して，「easyrs
 |    ca.crt    |     ./pki/     |
 | client名.key | ./pki/private/ |
 | client名.crt | ./pki/issued/  |
-|    ta.key    |   ../easyrsa/  |
+|    ta.key    |     ./pki/     |
 |--------------|----------------|
 
 
