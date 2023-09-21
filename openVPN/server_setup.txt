@@ -56,6 +56,15 @@ $ sudo apt install openvpn easy-rsa
     クライアントのIPを固定するときのために利用するディレクトリ
     $ sudo mkdir /etc/openvpn/ccd
 
+# ポートの設定
+ポートを開放する
+    大抵は"1194"を開ける
+    $ sudo ufw allow 1194
+VPNトンネルを通過するすべての通信を許可する
+    ネットワークのインターフェイスは大抵の場合は"tun0"
+    $ sudo ufw allow out on tun0 from any to any
+    $ sudo ufw allow in on tun0 from any to any
+
 # サーバの起動とsystemctl
 サーバの起動
     $ sudo systemctl start openvpn@server.service
