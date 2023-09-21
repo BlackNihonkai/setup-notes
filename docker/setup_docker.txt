@@ -6,8 +6,9 @@
 標準のリポジトリは最新版ではないため、以下を実行してGPGキーを入手
     $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 以下を実行して、リポジトリを追加
-    $ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null    
-
+    $ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        Linux MintなどのUbuntuベースのOSを使う場合には「cat /etc/os-relese」コマンドを実行し、「UBUNTU_CODENAME」に書かれている文字列を、上記「$(lsb_release -cs)」部分に代入する
+   
 # 依存関係をインストール
 $ sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
 
