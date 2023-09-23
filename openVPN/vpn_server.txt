@@ -29,6 +29,16 @@ iptablesの設定(Serverでの操作)
     以下はroot環境
     $ sudo iptables -A FORWARD -d 10.8.0.0/24 -p all -o tun0 -j ACCEPT
     $ sudo iptables -A FORWARD -s 10.8.0.0/24 -p all -i tun0 -j ACCEPT
+    $ sudo iptables -A INPUT -p udp --dport 1194 -j ACCEPT
+    $ sudo iptables -I INPUT -i tun+ -j ACCEPT
+    $ sudo iptables -A FORWARD -m state --state NEW -i tun+ -o eth0 -j ACCEPT
+    $ sudo iptables -A FORWARD -m state --state ESTABLISHED,RELATED -o tun+ -j ACCEPT
+    $ sudo iptables -A FORWARD -m state --state ESTABLISHED,RELATED -i tun+ -j ACCEPT
+    $ sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+
+    $ sudo iptables -A FORWARD -m state --state NEW -o eth0 -j ACCEPT
+    $ sudo iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+    $ sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
 
 # 一部のクライアントだけforwardする場合
@@ -46,9 +56,10 @@ iptablesの設定(Serverでの操作)
 
 # 全てのクライアントをforwardする場合
 「/etc/openvpn/server.conf」の編集
-    200行目付近の以下の二行がコメントアウトされているので、それを解除する
+    200行目付近のコメントアウトされている二行と、クライアント側のルート指定を追記する
         push "redirect-gateway def1 bypass-dhcp"
         push "dhcp-option DNS 8.8.8.8"
+        push "route 10.8.0.0 255.255.255.0"
     DNSサーバのIPは「8.8.8.8」以外が書かれている場合もある
         その時は変更を行っておく
 
