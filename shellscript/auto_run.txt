@@ -1,0 +1,20 @@
+###################################
+## 起動時にShellScriptを実行する ##
+###################################
+
+# ShellScriptの用意
+ShellScriptを作成し、権限を付与する
+    $ touch test.sh
+    $ chmod +x ~/test.sh
+
+# serviceファイルの作成
+自動実行を行うために、serviceファイルを作成する
+これにより、systemctlで実行などの操作が行える
+    $ sudo nano /etc/systemd/system/auto_shell.service
+    書き込む内容は同封の「auto_shell.service」を参照
+        [注意]
+            「ExecStart」の項目に実行ファイルを記述するが、絶対パスで記述する必要がある
+
+# 自動起動の設定
+「systemctl」を使って自動起動の設定をする
+    $ sudo systemctl enable auto_shell.service
