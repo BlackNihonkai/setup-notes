@@ -1,0 +1,29 @@
+################
+## Docker Hub ##
+################
+
+自作したコンテナをimageに変換して、DockerHubにアップロードする
+
+# コンテナからイメージを作成する
+コンテナを停止する
+    $ docker stop コンテナ名
+
+コンテナから新しいイメージを作成する
+    $ docker commit コンテナ名 新イメージ名
+
+イメージが作成されたことを確認しておく
+    $ docker images
+
+# DockerHubにアップロードする
+DockerHubにログイン
+    $ docker login
+
+ローカルで作成したimageにリポジトリ名とタグを設定する
+    $ docker tag ローカルイメージ名:tag ユーザ名/リモートリポジトリ名:tag
+        $ docker tag test-image:latest user1/test-image:latest
+
+イメージのアップロード
+    $ docker push ユーザ名/リモートリポジトリ名:tag
+        $ docker push user1/test-image:latest
+
+# 念の為、WEBブラウザから確認しておく
