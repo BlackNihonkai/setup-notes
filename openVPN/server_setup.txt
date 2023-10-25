@@ -26,10 +26,6 @@ $ sudo apt install openvpn easy-rsa
     ドキュメントが作成されたことを確認
         pki/ca.crt、pki/private/ca.key、pki/private/server.key、pki/issued/server.crt、pki/ta.key
 
-# サーバの鍵と証明書の作成
-サーバの鍵と証明書を生成して署名、までをコマンド一つでできる
-    $ sudo ./easyrsa build-server-full server nopass
-
 # サーバ設定(.conf)
 まずは、各種ドキュメントを移動させる
     ($ sudo mkdir /etc/openvpn)
