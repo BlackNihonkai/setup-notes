@@ -79,6 +79,11 @@ PCIデバイスを確認するコマンド
         $ sudo lspci -v
 
 
+# GPU
+nvidia-smiでGPU名を確認するコマンド
+    $ nvidia-smi --query-gpu=name --format=csv    
+
+
 # uname
 システム情報を確認できるコマンド
     $ uname
