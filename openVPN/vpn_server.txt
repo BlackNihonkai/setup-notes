@@ -26,7 +26,8 @@ easy-rsaをインストールしたディレクトリに移動して，「easyrs
 参考：https://pcvogel.sarakura.net/2017/05/31/31724
 # 共通の操作
 iptablesの設定(Serverでの操作)
-    以下はroot環境
+    以下はroot環境で実行する
+    IPアドレス・ポート番号・ネットワークインターフェースを変更した上で実行する
     $ sudo iptables -A FORWARD -d 10.8.0.0/24 -p all -o tun0 -j ACCEPT
     $ sudo iptables -A FORWARD -s 10.8.0.0/24 -p all -i tun0 -j ACCEPT
     $ sudo iptables -A INPUT -p udp --dport 1194 -j ACCEPT
@@ -35,11 +36,6 @@ iptablesの設定(Serverでの操作)
     $ sudo iptables -A FORWARD -m state --state ESTABLISHED,RELATED -o tun+ -j ACCEPT
     $ sudo iptables -A FORWARD -m state --state ESTABLISHED,RELATED -i tun+ -j ACCEPT
     $ sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
-
-    $ sudo iptables -A FORWARD -m state --state NEW -o eth0 -j ACCEPT
-    $ sudo iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-    $ sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
-
 
 # 一部のクライアントだけforwardする場合
 クライアントの「/etc/openvpn/client/client.conf」の編集
