@@ -57,5 +57,6 @@ Pythonなどを書くときに便利
 # Rainbow CSV
 CSVファイルのそれぞれの要素がどのカラムに属するかを色付けしてくれる拡張機能
 
-
+# Remote Development
+Dockerコンテナ内でのデバッグなどができる
 
