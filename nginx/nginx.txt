@@ -42,7 +42,7 @@ nginxの設定ファイルを確認し、"index.html"の居場所を確認する
 nginxの設定を変更した場合には、反映させておく
     $ service nginx reload
 
-参考：https://www.kagoya.jp/howto/cloud/container/dockernginx/
+# 参考：https://www.kagoya.jp/howto/cloud/container/dockernginx/
 
 
 
