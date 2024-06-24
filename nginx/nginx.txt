@@ -6,4 +6,44 @@
 aptでインストールできる
     $ sudo apt install -y nginx
 
-# Nginxの操作
+
+
+############################
+## Dockerでのセットアップ ##
+############################
+
+# Dockerでのセットアップが簡単
+Dockerイメージを入手する
+    $ docker image pull nginx
+nginxイメージをもとにコンテナを生成し、実行する
+    コンテナ実行時のオプションとして、「-p 8080:80」などのようにポートの紐づけを行うとよい
+        "-p 8080:80"：これはDockerコンテナ側のポート（80番）をホスト側のポート（8080番）に紐づけ
+この時点でセットアップ完了
+    「http://localhost:8080/」などのようにコンテナにアクセスすることで、「Welcome to nginx!」のページが表示される
+
+
+# 自分で作ったHTMLファイルを表示させる
+まずはDockerコンテナ内に入る
+    execなどを使う
+nginxの設定ファイルを確認し、"index.html"の居場所を確認する
+    $ cat /etc/nginx/conf.d/default.conf
+        catやnano、viなどを使って以下の内容を確認
+        ただし、Dockerイメージには、nanoやviのようなエディタは入ってない可能性が大
+        ------------------------------------------
+        location / {
+                root    /usr/share/nginx/html;
+                index index.html index.htm;
+        ------------------------------------------
+        これを見ると、「/usr/share/nginx/html」の直下に"index.html"ファイルが存在すればよいことがわかる
+当該ディレクトリ下の"index.html"を編集する
+    すでに、自作ページのためのファイル群を用意している場合は、ディレクトリ指定の部分を「root  /usr/share/nginx/mypage;」などに変更する
+
+# 設定の反映
+nginxの設定を変更した場合には、反映させておく
+    $ service nginx reload
+
+
+
+#################
+## Nginxの操作 ##
+#################
