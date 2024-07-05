@@ -53,11 +53,13 @@ $ ssh-copy-id -i ~/.ssh/id_rsa.pub [リモートのユーザ名]@[リモート�
 # sshログインは以下でもできるようになる
 $ ssh [接続時の名前]
 
-# パラメータ一覧
+# よく使うパラメータ一覧
 |     Host     |  ホスト名  | 接続時に使用する名前 |
 |   HostName   | IPアドレス | ホスト名でも良い     |
 |     User     |  ユーザ名  |                   |
 |     Port     | ポート番号 | デフォルトでは22     |
 | ProxyCommand | フォワード | ポートフォワード     |
-
+| LocalForward | フォワード | ポートフォワード     |
     ProxyCommandは「ProxyCommand ssh -W %h:%p ホスト名」のように使う
+    LocalForwardは「LocalForward ローカルのポート ホスト名(=これはURLなど):ホストのポート」のように使う
+        当該ホストにssh接続をした状態でlocalhost:ローカルのポートでWebページなどが見れる
