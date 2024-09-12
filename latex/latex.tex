@@ -143,7 +143,7 @@
     事前に"\textbackslash usepackage\{graphicx\}"を宣言してパッケージを読み込んでおく必要がある。
     "\textbackslash includegraphics\{\}"を"\textbackslash fbox\{\}"の中に入れることで、画像を枠線で囲むことができる。
 
-    \begin{lstlisting}[caption=図・画像の挿入,label=image]
+    \begin{lstlisting}[caption=図・画像を作成,label=image]
       %\usepackage[dvipdfmx]{graphicx}
       \begin{figure}[htbp]
         \centering
@@ -155,8 +155,36 @@
   
   \subsection{表の表示}
     表を表示するには、"table"を使う。
-    コード\ref{table}に示すように書くことで、表を作ることができる。
+    コード\ref{table_code}に示すように書くことで、表を作ることができる。
+    作成した表は表\ref{table_result}に示す。
+    
+    \begin{lstlisting}[caption=表を作成,label=table_code,language=tex]
+      \begin{table}[htbp]
+        \centering
+        \caption{hoge}
+        \label{tab:hoge}
+        \begin{tabular}{|llll|l|}
+          \hline
+          hoge & fuga & piyo & foo & bar \\
+          \hline
+          0 & 0 & 0 & 0 & 0 \\
+          \hline
+        \end{tabular}
+      \end{table}
+    \end{lstlisting}
 
+    \begin{table}[htbp]
+      \centering
+      \caption{表を作成}
+      \label{table_result}
+      \begin{tabular}{|llll|l|}
+        \hline
+        hoge & fuga & piyo & foo & bar \\
+        \hline
+        0 & 0 & 0 & 0 & 0 \\
+        \hline
+      \end{tabular}
+    \end{table}
 
 
 \section{その他の機能}
