@@ -106,7 +106,7 @@
     \end{lstlisting}
   
   \subsection{Configファイル}
-    "config"ファイルを作成し、SSHサーバ(つまり接続先)の情報を記述しておくことで、接続が楽になる。
+    "config"ファイルを作成し、SSHサーバ(つまり接続先)の情報を記述しておくことで、接続が楽になる\cite{SSHConfig}。
     また、ポートフォワードや踏み台を挟んでの通信も便利になる。
     
     ".ssh/"ディレクトリが存在しない場合には、"mkdir ~/.ssh/"でディレクトリを作成しておき、コード\ref{ssh-config}に示すように"config"ファイルを作成する。
@@ -249,10 +249,10 @@
     "\textbackslash usepackage\{color\}"でパッケージを読み込み、"\textbackslash textcolor\{文字の色\}\{文字\}"を用いる。文字の色は「red」・「blue」・「green」・「yellow」・「magenta」・「white」・「black」の7色が使える。
 \end{comment}
 
-\begin{comment}
+%\begin{comment}
 % 参考文献の記述
 \begin{thebibliography}{1}
-  \bibitem{SouceCode} LaTeXにソースコードを【美しく】貼る方法, \url{https://qiita.com/ta_b0_/items/2619d5927492edbb5b03}
+  \bibitem{SSHConfig} ~/.ssh/configを使ってSSH接続を楽にする, RAKUS Developers Blog(ラクス エンジニアブログ), \url{https://tech-blog.rakus.co.jp/entry/20210512/ssh}
 \end{thebibliography}
 %\end{comment}
 
