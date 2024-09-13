@@ -102,7 +102,7 @@
       # 秘密鍵と公開鍵のペアを作成
       $ ssh-keygen -t rsa
       # リモートへ公開鍵を転送する
-      $ ssh-copy-id -i ~/.ssh/id_rsa.pub [リモートのuser名]@[リモートのIP]
+      $ ssh-copy-id -i ~/.ssh/id_rsa.pub User@IP_address
     \end{lstlisting}
   
   \subsection{Configファイル}
@@ -121,9 +121,9 @@
 
 
     \begin{lstlisting}[caption=configファイルの書式,label=ssh-conf-file]
-      Host [接続に使う名前]
-        HostName[ホストIP]
-        User [user名]
+      Host 接続名
+        HostName IPAddress
+        User ユーザ名
     \end{lstlisting}
 
 
