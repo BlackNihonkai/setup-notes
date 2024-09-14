@@ -1,0 +1,300 @@
+\documentclass[a4paper,10pt]{jsarticle}
+\usepackage[top=10truemm,bottom=15truemm,left=15truemm,right=15truemm]{geometry}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{here}
+\usepackage{mathcomp}
+\usepackage{color}
+\usepackage{bbm}
+\usepackage{comment}
+\usepackage{url}
+\usepackage{listings,jvlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
+
+%ここからソースコードの表示に関する設定
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+
+%ここまでソースコードの表示に関する設定
+
+
+%図と図の間の余白
+\setlength\floatsep{0pt}
+
+%本文と図の間の余白
+\setlength\textfloatsep{0pt}
+
+%本文中の図の余白
+\setlength\intextsep{0pt}
+
+%図とキャプションの間の余白
+\setlength\abovecaptionskip{0pt}
+
+% ページ番号ってどうやってつけるん？
+%\pagestyle{plain}
+
+\title{Javaを使ってWebアプリをつくる}
+\author{BlackNihonkai}
+\date{更新日：\today  \the\hour 時\the\minute 分}
+
+\renewcommand{\lstlistingname}{コード}
+\begin{document}
+% 設定したタイトルなどを表示
+% 『タイトル - title, author, date, maketitle』｜https://medemanabu.net/latex/title-author-date-maketitle/
+\maketitle
+
+% 本文書き始め
+
+% コメントアウト
+% 文字サイズの指定:{\large 大きい文字}
+% 番号付きの箇条書き
+%\begin{enumerate}
+%  \item 項目1
+%  \item 項目2
+%\end{enumerate}}
+% 『Tex入門』｜https://www.comp.tmu.ac.jp/tsakai/lectures/intro_tex.html
+
+\section{開発環境のセットアップ}
+  まずは、開発環境を構築する。
+  JDKのインストールも必要となる。
+
+  \subsection{Pleiadesのインストール}
+    Javaを使ってアプリケーションを作成する場合には、Eclipseを用いるのが一般的である。
+    Webアプリケーションを作る場合には、\textcolor{red}{Pleiades}を用いて開発するのが便利らしい。
+    Pleiadesを用いる場合にはEclipseも一緒にインストールされ、Eclipseでの開発も便利になる。
+ 
+
+\begin{comment}
+\section{LaTeXにソースコードを貼り付ける}
+  LaTeXにソースコードを美しく貼り付ける\cite{SouceCode}。具体的には以下の条件を満たすようにする。
+  \begin{itemize}
+    \item ソースコードは等幅のフォント
+    \item 左側に行数を表示
+    \item キャプションをソースコードの上に表示
+    \item キャプションは「ソースコードn」(n=1,2,3,…)
+    \item キャプション下とソースコード最終行の下に線を引く
+  \end{itemize}
+  texliveに標準付属しているjvlistingを使うことで、上記の条件を実現する。
+
+  \subsection{ソースコード貼り付け手順}
+    \begin{enumerate}
+      \item TeXソースコード内で"listings"と"jvlisting"の二つのパッケージを読み込む
+      \begin{enumerate}
+        \item これは"\textbackslash usepackage\{listings,jvlisting\}"を書くことでOK
+        \item "jvlisting"は日本語のコメントアウトをする場合に必要となる
+        \begin{enumerate}
+          \item \textcolor{red}{執筆時点での環境では"jvlisting"による日本語コメントアウトが動作しなかった}
+          \item "jlisting"なるものをインストールして、適切な場所にファイルを配置すれば、しっかりと日本語のコメントアウトができるらしい(動作未確認)
+        \end{enumerate}
+      \end{enumerate}
+      \item コード\ref{hello_code1}に示されるソースコードの表示に関する設定を"\textbackslash begin\{document\}"の前に記述する
+      \item "\textbackslash begin\{lstlisting\}"と"\textbackslash end\{lstlisting\}"との間に表示したいソースコードを書く
+      \begin{enumerate}
+        \item "\textbackslash begin\{lstlisting\}[caption=キャプション,label=ラベル]"と書くことで、キャプションとラベルを設定できる。
+        \item ラベルを設定することで、本文中に"\textbackslash ref\{ラベル\}"として表示できる
+      \end{enumerate}
+    \end{enumerate}
+
+
+\section{図表の表示}
+  \subsection{図・画像の表示}
+    図や画像を表示するには、"figure"を使う。
+    コード\ref{image}に示すように書くことで、画像形式のファイルを表示することができる。
+    
+    事前に"\textbackslash usepackage\{graphicx\}"を宣言してパッケージを読み込んでおく必要がある。
+    "\textbackslash includegraphics\{\}"を"\textbackslash fbox\{\}"の中に入れることで、画像を枠線で囲むことができる。
+
+    \begin{lstlisting}[caption=図・画像を作成,label=image]
+      %\usepackage[dvipdfmx]{graphicx}
+      \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=12cm]{hoge.png}
+        \caption{hoge}
+        \label{fig:hoge}
+      \end{figure}
+    \end{lstlisting}
+  
+  \subsection{表の表示}
+    表を表示するには、"table"を使う。
+    コード\ref{table_code}に示すように書くことで、表を作ることができる。
+    作成した表は表\ref{table_result}に示す。
+    
+    \begin{lstlisting}[caption=表を作成,label=table_code,language=tex]
+      \begin{table}[htbp]
+        \centering
+        \caption{hoge}
+        \label{tab:hoge}
+        \begin{tabular}{|llll|l|}
+          \hline
+          hoge & fuga & piyo & foo & bar \\
+          \hline
+          0 & 0 & 0 & 0 & 0 \\
+          \hline
+        \end{tabular}
+      \end{table}
+    \end{lstlisting}
+
+    \begin{table}[htbp]
+      \centering
+      \caption{表を作成}
+      \label{table_result}
+      \begin{tabular}{|llll|l|}
+        \hline
+        hoge & fuga & piyo & foo & bar \\
+        \hline
+        0 & 0 & 0 & 0 & 0 \\
+        \hline
+      \end{tabular}
+    \end{table}
+
+
+\section{その他の機能}
+  \subsection{文字の色}
+    "textcolor"を使うことで文字の色を変えることができる。
+    "\textbackslash usepackage\{color\}"でパッケージを読み込み、"\textbackslash textcolor\{文字の色\}\{文字\}"を用いる。文字の色は「red」・「blue」・「green」・「yellow」・「magenta」・「white」・「black」の7色が使える。
+\end{comment}
+
+\begin{comment}
+% 参考文献の記述
+\begin{thebibliography}{1}
+  \bibitem{docker} 【入門】Dockerでnginxを動かす手順, カゴヤのサーバ研究室, \url{https://www.kagoya.jp/howto/cloud/container/dockernginx/}
+\end{thebibliography}
+%\end{comment}
+
+
+\begin{comment}
+    % 図の挿入
+    \begin{figure}[H]
+      \begin{center}
+        \includegraphics[width=60mm]{images/software.png}
+        \caption{ソフトウェアの全体構成}
+        \label{software}
+      \end{center}
+    \end{figure}
+\end{comment}
+
+\begin{comment}
+\section{提案システム}
+  提案システムの概要を図\ref{gaiyo}に示す。まず指文字画像を撮影し、これを二種類のモデルに入力する。
+  二種類のモデルでは、VisionTransformerを用いたモデルと、MediaPipeによるKey-Point抽出を行った後に入力するTransformerモデルを用いる。
+  VisionTransformerモデルを用いる部分では、画像の状態のままモデルに入力しする。
+  Transformerモデルを用いる部分では、画像をMediaPipeで抽出した三次元座標データをモデルに入力する。
+  最後に両モデルの出力結果を比較し、正解である確率のより高いほうを最終的な翻訳結果として出力する。
+  % 図の挿入
+  \begin{figure}[H]
+    \begin{center}
+      \includegraphics[width=100mm]{images/gaiyo.png}
+      \caption{提案システムの概要}
+      \label{gaiyo}
+    \end{center}
+  \end{figure}
+
+    
+\section{今後の課題}
+  現在の状態は、MediaPipeとTransformerを用いるモデルでは96\%程度、VisionTransformerを用いたモデルでは99\%程度の翻訳精度である。これはいずれのモデルでも学習に用いていない人の指文字画像を用いて計測した翻訳精度である。
+
+  提案システムで用いる二種類のモデルは、それぞれの翻訳精度に差がある。
+  本システム全体での翻訳精度を高めるために、翻訳精度の高いモデルの出力結果に重みをつけることなどの方法を検討する必要がある。
+\section{研究計画}
+  今後の研究計画について、短期計画を図\ref{tanki}に、長期計画を図\ref{tyoki}に示す。
+  まず、７月中旬までに本システムの実装を行う。
+  その後、システム全体の翻訳精度を確認し、改良を行いながら評価実験へと移っていく予定である。
+  % 図の挿入
+  \begin{figure}[H]
+    \begin{center}
+      \includegraphics[width=100mm]{images/tanki.png}
+      \caption{研究計画（短期）}
+      \label{tanki}
+    \end{center}
+  \end{figure}
+  % 図の挿入
+  \begin{figure}[H]
+    \begin{center}
+      \includegraphics[width=100mm]{images/tyoki.png}
+      \caption{研究計画（長期）}
+      \label{tyoki}
+    \end{center}
+  \end{figure}
+\end{comment}
+
+\begin{comment}
+\section{デュアルラーニング}
+    デュアルラーニングは以下の手順で行われる。
+    \begin{enumerate}
+        \item 通常のフレームを入力にして、P2Tネットワークの重みを更新
+        \item その重みを使って行ったテキスト予測を入力にして、T2Pを実施し重みを再更新
+        \item T2Pネットワークに通常のテキストを入力して重みを更新
+        \item その重みを使って行った手話予測を入力にして、P2Tを実施し重みを再更新
+        \item 以上を繰り返す
+    \end{enumerate}
+\end{comment}
+
+\begin{comment}
+\section{実験の方法と結果}
+    BLEUを用いてSignNet IIモデルの評価を行った。
+    データセットはGSL（ドイツの手話）データセットを使用した。
+    BLEU-1、BLEU-4のスコアは図\ref{result}に示されるように、それぞれ39.17、12.34となり、他の論文で提案されたモデルと比較して、モデル性能が向上した。
+    二つのモデルを同時に学習させたため、計算負荷が大きくなり、データセットのおよそ10\%のみを学習に使用した。
+    % 図の挿入
+    \begin{figure}[H]
+      \begin{center}
+        \includegraphics[width=55mm]{images/result.jpg}
+        \caption{実験結果}
+        \label{result}
+      \end{center}
+    \end{figure}
+\end{comment}
+
+
+\begin{comment}
+\newpage
+
+% スライドの挿入
+\begin{figure}
+  \begin{center}
+    \fbox{\includegraphics[width=95mm]{images/5-paper-4.png}}
+    \caption{4ページ目}
+    \label{4}
+
+    \fbox{\includegraphics[width=95mm]{images/5-paper-5.png}}
+    \caption{5ページ目}
+    \label{5}
+
+    \fbox{\includegraphics[width=95mm]{images/5-paper-7.png}}
+    \caption{7ページ目}
+    \label{7}
+  \end{center}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \fbox{\includegraphics[width=95mm]{images/5-paper-8.png}}
+    \caption{8ページ目}
+    \label{8}
+
+    \fbox{\includegraphics[width=95mm]{images/5-paper-10.png}}
+    \caption{10ページ目}
+    \label{10}
+
+    \fbox{\includegraphics[width=95mm]{images/5-paper-11.png}}
+    \caption{11ページ目}
+    \label{11}
+  \end{center}
+\end{figure}
+\end{comment}
+
+\end{document}
