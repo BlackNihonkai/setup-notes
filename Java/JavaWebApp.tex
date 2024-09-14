@@ -3,7 +3,7 @@
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{here}
 \usepackage{mathcomp}
-\usepackage{color}
+\usepackage[dvipdfmx]{color}
 \usepackage{bbm}
 \usepackage{comment}
 \usepackage{url}
@@ -72,10 +72,32 @@
   まずは、開発環境を構築する。
   JDKのインストールも必要となる。
 
-  \subsection{Pleiadesのインストール}
+  \subsection{Pleiadesのダウンロード}
     Javaを使ってアプリケーションを作成する場合には、Eclipseを用いるのが一般的である。
     Webアプリケーションを作る場合には、\textcolor{red}{Pleiades}を用いて開発するのが便利らしい。
     Pleiadesを用いる場合にはEclipseも一緒にインストールされ、Eclipseでの開発も便利になる。
+    
+    Pleiadesのインストールするには、\url{https://willbrains.jp/}にアクセスし、図\ref{Pleiades_ver0}の"Pleiades ALL in One"をダウンロードする。(原則として、)最新版のもの(図\ref{Pleiades_ver0}の場合は「Eclipse 2024」)をクリックして、図\ref{Pleiades_DL}の画面に遷移する。
+
+    
+    \begin{figure}[H]
+      \centering
+      \begin{minipage}[b]{0.49\columnwidth}
+        \centering
+        \fbox{\includegraphics[width=0.9\columnwidth]{./images/pleiades0.png}}
+        \caption{Pleiades All in Oneのバージョン選択}
+        \label{Pleiades_ver0}
+      \end{minipage}
+      \begin{minipage}[b]{0.49\columnwidth}
+        \center
+        \fbox{\includegraphics[width=0.9\columnwidth]{./images/pleiades1.png}}
+        \caption{Pleiades All in Oneのダウンロード}
+        \label{Pleiades_DL}
+      \end{minipage}
+    \end{figure}
+
+  \subsection{Pleiadesのインストール}
+    前項の手順でダウンロードした"Pleiades All in One"は、zipの状態であるためzipを回答するだけでインストールが始まる。
  
 
 \begin{comment}
