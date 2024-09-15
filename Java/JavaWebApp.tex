@@ -129,6 +129,90 @@
 
     これがServletとJSPの役割分担の例となる。
 
+  \subsection{実装}
+    \subsubsection{Eclipseでプロジェクトを作成}
+      まず、\textcolor{black}{Eclipseを起動}して、\textcolor{red}{"File \textgreater \ New \textgreater \ Dynamic Web Project"を選択}する。
+      日本語環境においては、"Dynamic Web Project"の部分が"動的Webプロジェクト"などの表記になっているだろう。
+
+      動的Webプロジェクトのウィンドウで、\textcolor{red}{プロジェクト名を入力}(例：SudokuWebApp)、\textcolor{red}{Dynamic web module versionを選択}する('24/9/15時点では"3.1"推奨)。
+      Finishをクリックしてプロジェクトを作成する。
+    \subsubsection{サーブレットの作成}
+      srcフォルダ内の"Java Resources > src"を右クリックし、\textcolor{red}{"New \textgreater \ Servlet"を選択}する。
+      開いたウィンドウで、\textcolor{red}{サーブレット名を入力}する(例：SudokuServlet)。
+      DoGetメソッドを利用するようにチェックを入れて、Finishをクリックする(ただし、執筆時点ではこの設定項目がなかったような気がする)。
+
+      今回はナンプレの盤面を仮に設定し、これを表示するまでのサーブレットを作成しコード\ref{sudoku_servlet}に示す。\textcolor{red}{※}ただし、このコードはChatGPTが吐き出したものであるが、この項を執筆している時点では動作した。\\
+
+      \begin{lstlisting}[caption="SudokuServlet"のコード例,label=sudoku_servlet]
+        import java.io.IOException;
+        import javax.servlet.ServletException;
+        import javax.servlet.annotation.WebServlet;
+        import javax.servlet.http.HttpServlet;
+        import javax.servlet.http.HttpServletRequest;
+        import javax.servlet.http.HttpServletResponse;
+
+        @WebServlet("/SudokuServlet")
+        public class SudokuServlet extends HttpServlet {
+            private static final long serialVersionUID = 1L;
+
+            protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                // 数独ボードを作成する簡単な例
+                int[][] board = {
+                    {5, 3, 0, 0, 7, 0, 0, 0, 0},
+                    {6, 0, 0, 1, 9, 5, 0, 0, 0},
+                    {0, 9, 8, 0, 0, 0, 0, 6, 0},
+                    {8, 0, 0, 0, 6, 0, 0, 0, 3},
+                    {4, 0, 0, 8, 0, 3, 0, 0, 1},
+                    {7, 0, 0, 0, 2, 0, 0, 0, 6},
+                    {0, 6, 0, 0, 0, 0, 2, 8, 0},
+                    {0, 0, 0, 4, 1, 9, 0, 0, 5},
+                    {0, 0, 0, 0, 8, 0, 0, 7, 9}
+                };
+
+                request.setAttribute("sudokuBoard", board);
+                request.getRequestDispatcher("sudoku.jsp").forward(request, response);
+            }
+        }
+      \end{lstlisting}
+
+    \subsubsection{JSPファイルの作成}
+      WebContentフォルダ内で"New \textgreater \ JSP File"を選択し、\textcolor{red}{ファイル名を入力}する(例：sudoku.jsp)。
+      コード\ref{sudoku_jsp}のように、サーブレットから送られてきたナンプレボードを表示するJSPページを作成する。\textcolor{red}{※}このコードについても、ChatGPTが吐き出したものであり、この項を執筆している時点では動作した。
+      また、"board"が"null"出ないかの確認をするように実装されている。\\
+
+      \begin{lstlisting}[caption="sudoku.jsp"のコード例,label=sudoku_jsp]
+        <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+        <html>
+        <head>
+            <title>Sudoku</title>
+        </head>
+        <body>
+            <h1>Sudoku Board</h1>
+            <table border="1">
+                <%
+                    int[][] board = (int[][]) request.getAttribute("sudokuBoard");
+                    if (board != null) {
+                        for (int i = 0; i < 9; i++) {
+                            out.println("<tr>");
+                            for (int j = 0; j < 9; j++) {
+                                out.println("<td>" + (board[i][j] == 0 ? "" : board[i][j]) + "</td>");
+                            }
+                            out.println("</tr>");
+                        }
+                    } else {
+                        out.println("<p>Error: Sudoku board not found!</p>");
+                    }
+                %>
+            </table>
+        </body>
+        </html>
+      \end{lstlisting}
+    \subsubsection{Webアプリケーションの実行}
+      プロジェクトを右クリックし、"Run As \textgreater \ Run on Server"を選択する。
+      ただし、初回の場合はサーバの設定などが必要となる。
+      SudokuServletが"http://localhost:8080/sudokuWebApp/SudokuServlet"で実行され、ナンバープレースのボードが表示される。
+      実行時に自動的にブラウザが起動された場合には、URLを正しく入力されていない場合があるので、そのときは自分でURL欄を書き直す必要がある。
+      
 
 \begin{comment}
 \section{LaTeXにソースコードを貼り付ける}
