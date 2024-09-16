@@ -129,7 +129,7 @@
 
     これがServletとJSPの役割分担の例となる。
 
-  \subsection{実装}
+  \subsection{実装 (ひとまずの実装)}
     \subsubsection{Eclipseでプロジェクトを作成}
       まず、\textcolor{black}{Eclipseを起動}して、\textcolor{red}{"File \textgreater \ New \textgreater \ Dynamic Web Project"を選択}する。
       日本語環境においては、"Dynamic Web Project"の部分が"動的Webプロジェクト"などの表記になっているだろう。
@@ -210,9 +210,77 @@
     \subsubsection{Webアプリケーションの実行}
       プロジェクトを右クリックし、"Run As \textgreater \ Run on Server"を選択する。
       ただし、初回の場合はサーバの設定などが必要となる。
-      SudokuServletが"http://localhost:8080/sudokuWebApp/SudokuServlet"で実行され、ナンバープレースのボードが表示される。
+      SudokuServletが"http://localhost:8080/SudokuWebApp/SudokuServlet"で実行され、ナンバープレースのボードが表示される。
       実行時に自動的にブラウザが起動された場合には、URLを正しく入力されていない場合があるので、そのときは自分でURL欄を書き直す必要がある。
       
+  \subsection{改善}
+    \subsubsection{見た目の改善１}
+      まずは、JSPファイルをもとに表示されるナンプレの盤面を、より見慣れた感じにする。
+      ナンプレの盤面を実現するためにCSSを設定する。
+      CSSを設定してナンプレ盤面を再現するコードをコード\ref{fix_banmen}に示す。\\
+      \textcolor{red}{※}相変わらず、ChatGPTが吐き出したものであり、この項を執筆している時点では動作することを確認した。
+
+      \begin{lstlisting}[caption=ナンプレの盤面を再現,label=fix_banmen,language=HTML]
+        <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+        <html>
+        <head>
+            <title>Sudoku</title>
+            <style>
+                table {
+                    border-collapse: collapse;
+                    margin: 20px auto;
+                    font-size: 20px;
+                    text-align: center;
+                }
+                td {
+                    width: 40px;
+                    height: 40px;
+                    border: 1px solid black;
+                    vertical-align: middle;
+                }
+                /* ３×３のブロックを区切る太い線 */
+                td.block-border-top {
+                    border-top: 3px solid black;
+                }
+                td.block-border-left {
+                    border-left: 3px solid black;
+                }
+                td.block-border-right {
+                    border-right: 3px solid black;
+                }
+                td.block-border-bottom {
+                    border-bottom: 3px solid black;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Sudoku Board</h1>
+            <table>
+                <%
+                    int[][] board = (int[][]) request.getAttribute("sudokuBoard");
+                    if (board != null) {
+                        for (int i = 0; i < 9; i++) {
+                            out.println("<tr>");
+                            for (int j = 0; j < 9; j++) {
+                                // 各セルにｃｓｓクラスを割り当てることで３×３の区切り線を作成
+                                String cssClass = "";
+                                if (i % 3 == 0) cssClass += " block-border-top";
+                                if (i == 8) cssClass += " block-border-bottom";
+                                if (j % 3 == 0) cssClass += " block-border-left";
+                                if (j == 8) cssClass += " block-border-right";
+
+                                out.println("<td class='" + cssClass.trim() + "'>" + (board[i][j] == 0 ? "" : board[i][j]) + "</td>");
+                            }
+                            out.println("</tr>");
+                        }
+                    } else {
+                        out.println("<p>Error: Sudoku board not found!</p>");
+                    }
+                %>
+            </table>
+        </body>
+        </html>
+      \end{lstlisting}
 
 \begin{comment}
 \section{LaTeXにソースコードを貼り付ける}
