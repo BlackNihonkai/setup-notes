@@ -1,5 +1,5 @@
 \documentclass[a4paper,10pt]{jsarticle}
-\usepackage[top=0truemm,bottom=15truemm,left=10truemm,right=10truemm]{geometry}
+\usepackage[top=10truemm,bottom=15truemm,left=15truemm,right=15truemm]{geometry}
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{here}
 \usepackage{mathcomp}
@@ -47,9 +47,9 @@
 % ページ番号ってどうやってつけるん？
 %\pagestyle{plain}
 
-\title{LaTeXの操作}
+\title{nanoエディタの設定}
 \author{BlackNihonkai}
-\date{更新日：\today}
+\date{更新日：\today  \the\hour 時\the\minute 分}
 
 \renewcommand{\lstlistingname}{コード}
 \begin{document}
@@ -68,30 +68,33 @@
 %\end{enumerate}}
 % 『Tex入門』｜https://www.comp.tmu.ac.jp/tsakai/lectures/intro_tex.html
 
-\section{コンパイル環境の構築}
-  「texlive」なるものをインストールしてコンパイル環境を構築する。
-  "apt"によるパッケージ管理を行っているOS(DebianベースのOS)でのインストール例をコード\ref{texlive}に示す。
-
-  インストールの完了までに、それなりの時間がかかるので注意されたい。
-  "tmux"環境などを用意して実行するのも手だ。
-
-  \begin{lstlisting}[caption=texliveのインストール,label=texlive]
-    sudo apt install texlive-full
-  \end{lstlisting}
-
-\section{コンパイルの実行}
-    vsCodeなどで保存と同時にコンパイルを実行して、PDFにしてくれるパッケージがあるらしいので、それが便利だろう。
-    その方法を除けば、コンパイル用のコマンドをターミナルに打ち込むことになる。
-    コンパイルのコマンドは大きく２つあり、「.tex」形式から「.dvi」形式にコンパイルを行うコマンドと、「.dvi」形式から「.pdf」形式にコンパイルするコマンドがある。
-    前者はコード\ref{tex2dvi}に、後者の一例をコード\ref{dvi2pdf}に示す。
-    \begin{lstlisting}[caption=tex形式からdvi形式へのコンパイル,label=tex2dvi]
-        platex YourFile.tex
+\section{ディレクトリ}
+  \subsection{ディレクトリの英語表記}
+    DebianをはじめとするLinuxをインストールした場合に、日本語設定にするとディレクトリ名の表示も日本語になっていて不便である。
+    これを英語名のディレクトリに変更する操作。
+    以下は、SSH環境などのようなCUI環境ではなく、\textcolor{red}{GUI}が見れる環境で実行する。
+    \begin{lstlisting}
+      LANG=C xdg-user-dirs-gtk-update
     \end{lstlisting}
 
-    \begin{lstlisting}[caption=dvi形式からpdf形式へのコンパイル,label=dvi2pdf]
-        dvipdfmx YourFile.dvi
+  \subsection{ディレクトリの監視と同期}
+    ディレクトリAの変更を監視し、変更があった場合にはディレクトリBに同期する。\\
+    inotify-toolsをインストールする。
+    \begin{lstlisting}
+      sudo apt install inotify-tools
     \end{lstlisting}
-    
+    ディレクトリを監視・同期するシェルスクリプトは以下のとおりである。
+    ただし、tmuxなどで実行するほうがよい。
+    \begin{lstlisting}
+      #!/bin/bash
+      while true; do
+        inotifywait -r -e modify,create,delete /path/to/directoryA/
+        rsync -av --delete/path/to/directoryA/ /path/to/directoryB/
+      done
+    \end{lstlisting}
+
+
+\begin{comment}
 \section{LaTeXにソースコードを貼り付ける}
   LaTeXにソースコードを美しく貼り付ける\cite{SouceCode}。具体的には以下の条件を満たすようにする。
   \begin{itemize}
@@ -122,30 +125,6 @@
       \end{enumerate}
     \end{enumerate}
 
-    \begin{lstlisting}[caption=ソースコードの表示に関する設定,label=hello_code1]
-      \lstset{
-        basicstyle={\ttfamily},
-        identifierstyle={\small},
-        commentstyle={\smallitshape},
-        keywordstyle={\small\bfseries},
-        ndkeywordstyle={\small},
-        stringstyle={\small\ttfamily},
-        frame={tb},
-        breaklines=true,
-        columns=[l]{fullflexible},
-        numbers=left,
-        xrightmargin=0zw,
-        xleftmargin=3zw,
-        numberstyle={\scriptsize},
-        stepnumber=1,
-        numbersep=1zw,
-        lineskip=-0.5ex
-      }
-    \end{lstlisting}
-
-  \subsection{キャプション名の変更}
-    現在は"Listing $\mathbbm{n}$" (ただし$\mathbbm{n}=0,1,2,…$)と表示されているので、"コード $\mathbbm{n}$"のように表示させる。
-    "\textbackslash begin\{document\}"の前に"\textbackslash renewcommand \{\textbackslash lstlistingname\}[コード]"と書いておくことでキャプション名を変更できる。
 
 \section{図表の表示}
   \subsection{図・画像の表示}
@@ -203,11 +182,14 @@
   \subsection{文字の色}
     "textcolor"を使うことで文字の色を変えることができる。
     "\textbackslash usepackage\{color\}"でパッケージを読み込み、"\textbackslash textcolor\{文字の色\}\{文字\}"を用いる。文字の色は「red」・「blue」・「green」・「yellow」・「magenta」・「white」・「black」の7色が使える。
+\end{comment}
 
-
+\begin{comment}
+% 参考文献の記述
 \begin{thebibliography}{1}
-  \bibitem{SouceCode} LaTeXにソースコードを【美しく】貼る方法, \url{https://qiita.com/ta_b0_/items/2619d5927492edbb5b03}
+  \bibitem{docker} 【入門】Dockerでnginxを動かす手順, カゴヤのサーバ研究室, \url{https://www.kagoya.jp/howto/cloud/container/dockernginx/}
 \end{thebibliography}
+%\end{comment}
 
 
 \begin{comment}

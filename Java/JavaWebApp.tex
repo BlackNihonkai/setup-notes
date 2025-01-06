@@ -281,6 +281,10 @@
         </body>
         </html>
       \end{lstlisting}
+    \subsubsection{ナンプレの問題を自動で生成する}
+      数独の例題生成\cite{sudoku_reidai}を参考にして、ナンプレの問題を自動で生成する仕組みを追加する。
+      当該サイトで解説されている方法は、C言語で実装されているため、同様の処理をJavaで再現することとなる。
+      また、これ以降もChatGPTを活用しながら理解していくことにする。
 
 \begin{comment}
 \section{LaTeXにソースコードを貼り付ける}
@@ -372,10 +376,11 @@
     "\textbackslash usepackage\{color\}"でパッケージを読み込み、"\textbackslash textcolor\{文字の色\}\{文字\}"を用いる。文字の色は「red」・「blue」・「green」・「yellow」・「magenta」・「white」・「black」の7色が使える。
 \end{comment}
 
-\begin{comment}
+%\begin{comment}
 % 参考文献の記述
 \begin{thebibliography}{1}
-  \bibitem{docker} 【入門】Dockerでnginxを動かす手順, カゴヤのサーバ研究室, \url{https://www.kagoya.jp/howto/cloud/container/dockernginx/}
+  %\bibitem{docker} 【入門】Dockerでnginxを動かす手順, カゴヤのサーバ研究室, \url{https://www.kagoya.jp/howto/cloud/container/dockernginx/}
+  \bibitem{sudoku_reidai} 数独の例題生成, 中嶋　勇気(東京電機大学工学部情報通信工学科 ネットワークシステム研究室), \url{http://www.net.c.dendai.ac.jp/~ynakajima/index.htm}
 \end{thebibliography}
 %\end{comment}
 
