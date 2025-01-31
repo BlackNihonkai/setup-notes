@@ -1,0 +1,121 @@
+\documentclass[a4paper,10pt]{jsarticle}
+\usepackage[top=0truemm,bottom=15truemm,left=10truemm,right=10truemm]{geometry}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{here}
+\usepackage{mathcomp}
+\usepackage{color}
+\usepackage{bbm}
+\usepackage{comment}
+\usepackage{url}
+\usepackage{listings,jvlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
+
+%ここからソースコードの表示に関する設定
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+
+%ここまでソースコードの表示に関する設定
+
+
+%図と図の間の余白
+\setlength\floatsep{0pt}
+
+%本文と図の間の余白
+\setlength\textfloatsep{0pt}
+
+%本文中の図の余白
+\setlength\intextsep{0pt}
+
+%図とキャプションの間の余白
+\setlength\abovecaptionskip{0pt}
+
+% ページ番号ってどうやってつけるん？
+%\pagestyle{plain}
+
+\title{NAS}
+\author{BlackNihonkai}
+\date{更新日：\today}
+
+\renewcommand{\lstlistingname}{コード}
+\begin{document}
+% 設定したタイトルなどを表示
+% 『タイトル - title, author, date, maketitle』｜https://medemanabu.net/latex/title-author-date-maketitle/
+\maketitle
+
+% 本文書き始め
+
+% コメントアウト
+% 文字サイズの指定:{\large 大きい文字}
+% 番号付きの箇条書き
+%\begin{enumerate}
+%  \item 項目1
+%  \item 項目2
+%\end{enumerate}}
+% 『Tex入門』｜https://www.comp.tmu.ac.jp/tsakai/lectures/intro_tex.html
+
+\section{sambaのインストール}
+    「samba」を使うことでファイルサーバを実装する。
+    apt形式でのインストールの場合は\ref{smb-apt}に示す。
+    インストール後にsamba上でログインするためのユーザを\ref{smb-user}に従って登録する。
+    samba用のユーザは必須で複数人でファイルサーバを使う場合にはそれぞれにユーザが必要になる。
+
+    \begin{lstlisting}[caption=sambaのインストール,label=smb-apt]
+        sudo apt install samba
+    \end{lstlisting}
+
+    \begin{lstlisting}[caption=sambaのユーザ登録,label=smb-user]
+        sudo pdbedit -a ユーザ名
+    \end{lstlisting}
+
+\section{sambaの設定}
+    \subsection{smb.confの編集}
+        sambaの設定ファイルは「/etc/samba/」に生成される。
+        「smb.conf」のバックアップをとってから編集する。
+        「smb.conf」ファイルの最後尾に\ref{smb-conf}に示されるものを追加する
+        \ref{smb-conf}中の「[share]」にかかれているものがサーバ名として表示される。
+
+        \begin{lstlisting}[caption=smb.confの追加内容,label=smb-conf]
+            [share]
+            path = /path/to/directory
+            writeable = yes
+            create mode = 0777
+            directory mode = 0777
+        \end{lstlisting}
+        
+    
+    \subsection{構文チェック}
+        以下に示すコマンドで構文チェックをしておく。
+        「Loaded services file OK.」と出力されれば問題ない。
+
+        \begin{lstlisting}[caption=sambaの構文チェック,label=smb-check]
+            testparm
+        \end{lstlisting}
+
+\section{sambaの実行}
+    sambaサーバを実行する。
+    \ref{smb-restart}のようにsmb.confファイルの設定を反映して実行する。
+    \ref{smb-enable}のようにすることで、サーバ機の起動時にsambaサーバが自動で実行されるようになる。
+
+    \begin{lstlisting}[caption=設定の反映とsambaサーバの実行,label=smb-restart]
+        sudo systemctl restart smbd nmbd
+    \end{lstlisting}
+
+    \begin{lstlisting}[caption=サーバの自動起動,label=smb-enable]
+        sudo systemctl enable smbd nmbd
+    \end{lstlisting}
+\end{document}
