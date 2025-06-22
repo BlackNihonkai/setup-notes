@@ -7,7 +7,8 @@
 \usepackage{bbm}
 \usepackage{comment}
 \usepackage{url}
-\usepackage{listings,jvlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
+\usepackage{listings, jlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
+\usepackage{xcolor}
 
 %ここからソースコードの表示に関する設定
 \lstset{
@@ -47,7 +48,7 @@
 % ページ番号ってどうやってつけるん？
 %\pagestyle{plain}
 
-\title{その他の設定}
+\title{FTPコマンド}
 \author{BlackNihonkai}
 \date{更新日：\today  \the\hour 時\the\minute 分}
 
@@ -68,30 +69,182 @@
 %\end{enumerate}}
 % 『Tex入門』｜https://www.comp.tmu.ac.jp/tsakai/lectures/intro_tex.html
 
-\section{ディレクトリ}
-  \subsection{ディレクトリの英語表記}
-    DebianをはじめとするLinuxをインストールした場合に、日本語設定にするとディレクトリ名の表示も日本語になっていて不便である。
-    これを英語名のディレクトリに変更する操作。
-    以下は、SSH環境などのようなCUI環境ではなく、\textcolor{red}{GUI}が見れる環境で実行する。
+\section{FTPとは}
+    FTPとは、File Transfer Protocolの略で、ファイルを転送するためのプロトコルである。
+    FTPを使うことで、リモートサーバーにファイルをアップロードしたり、リモートサーバーからファイルをダウンロードしたりすることができる。
+    FTPは、TCP/IPプロトコルを使用して通信を行う。
+  \subsection{FTPの注意点}
+    FTPは、セキュリティ上の問題があるため、パスワードが平文で送信される。\\
+    \textcolor{gray}{そのため、FTPを使用する際は、セキュリティに注意する必要がある。}
+    \textcolor{gray}{代替として、SFTP（SSH File Transfer Protocol）やFTPS（FTP Secure）などのセキュアなファイル転送プロトコルを使用することが推奨される。}
+
+\section{FTPコマンド}
+  \subsection{FTPサーバーへの接続}
+    FTPサーバーに接続するには、以下のコマンドを使用する。
     \begin{lstlisting}
-      LANG=C xdg-user-dirs-gtk-update
+      ftp [ホスト名]
+    \end{lstlisting}
+    例: `ftp example.com`
+    これにより、FTPサーバーに接続し、ログインを求められる。
+    サーバのアドレスを指定しないでftpコマンドを実行すると、ローカルのFTPサーバーに接続され、待機状態になる。
+    この場合には、"open"コマンドを実行して、接続先のサーバーを指定する必要がある。  
+    \begin{lstlisting}
+      ~$ ftp
+      ftp> open [ホスト名]
+    \end{lstlisting}
+    例: `ftp> open example.com` 
+    \subsection{ログイン}
+    FTPサーバーに接続した後、ユーザー名とパスワードを入力してログインする。
+    \begin{lstlisting}
+      Name ([ホスト名]:[ユーザー名]): [ユーザー名]
+      Password: [パスワード]
+    \end{lstlisting}
+    例: `Name (example.com:user): user`
+    パスワードを入力すると、ログインが成功し、FTPサーバーのプロンプトが表示される。
+\section{FTPコマンドの基本操作}
+    FTPサーバーに接続した後、以下のコマンドを使用して基本的な操作を行うことができる。
+
+    \subsection{ヘルプの表示}
+    利用可能なFTPコマンドの一覧を表示するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      help
+    \end{lstlisting}
+    または、特定のコマンドの詳細を表示するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      help [コマンド名]
+    \end{lstlisting}
+    例: `help put`
+    これにより、指定したコマンドの使い方やオプションが表示される。
+
+    \subsection{接続の確認}
+    現在接続しているFTPサーバーの情報を確認するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      status
+    \end{lstlisting}
+    これにより、現在の接続状態やログインユーザー名、リモートサーバーの情報が表示される。
+
+    \subsection{ファイルのアップロード}
+    FTPサーバーにファイルをアップロードするには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> put [ローカルファイル名] [リモートファイル名]
+    \end{lstlisting}
+    例: `put localfile.txt remotefile.txt`
+    これにより、ローカルのファイルをFTPサーバーにアップロードすることができる。
+    リモートファイル名を省略すると、ローカルファイル名と同じ名前でアップロードされる。
+    \begin{lstlisting}
+      ftp> put localfile.txt
+    \end{lstlisting}
+    また、複数のファイルを一度にアップロードするには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> mput [ローカルファイル名1] [ローカルファイル名2] ...
+    \end{lstlisting}
+    例: `mput file1.txt file2.txt`
+    これにより、複数のローカルファイルをFTPサーバーにアップロードすることができる。
+    注意: `mput`コマンドを使用する場合、各ファイルごとに確認メッセージが表示されるため、確認を求められた場合は`y`（yes）を入力してアップロードを続行する必要がある。
+
+    \subsection{ファイルのダウンロード}
+    FTPサーバーからファイルをダウンロードするには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> get [リモートファイル名] [ローカルファイル名]
+    \end{lstlisting}
+    例: `get remotefile.txt localfile.txt`
+    これにより、FTPサーバーからリモートファイルをローカルにダウンロードすることができる。
+    ローカルファイル名を省略すると、リモートファイル名と同じ名前でダウンロードされる。
+    \begin{lstlisting}
+      ftp> get remotefile.txt
+    \end{lstlisting}
+    また、複数のファイルを一度にダウンロードするには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> mget [リモートファイル名1] [リモートファイル名2] ...
+    \end{lstlisting}
+    例: `mget remotefile1.txt remotefile2.txt`
+    これにより、複数のFTPサーバー上のファイルをローカルにダウンロードすることができる。
+    注意: `mget`コマンドを使用する場合、各ファイルごとに確認メッセージが表示されるため、確認を求められた場合は`y`（yes）を入力してダウンロードを続行する必要がある。
+
+    \subsection{ファイルの転送モードの変更}
+    FTPでは、ファイルの転送モードをバイナリモードとASCIIモードの2つから選択することができる。
+    バイナリモードは、画像や音声などのバイナリファイルを転送するために使用され、ASCIIモードはテキストファイルを転送するために使用される。
+    バイナリモードに切り替えるには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> bin
+    \end{lstlisting}
+    これにより、FTPサーバーとのファイル転送がバイナリモードで行われるようになる。
+    ASCIIモードに切り替えるには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> asc
+    \end{lstlisting}
+    これにより、FTPサーバーとのファイル転送がASCIIモードで行われるようになる。
+    ファイルの転送モードを変更することで、転送中のファイルの形式に応じて適切な処理が行われる。
+
+    \subsection{ディレクトリの変更}
+    FTPサーバー上のディレクトリを変更するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      cd [ディレクトリ名]
+    \end{lstlisting}
+    例: `cd /path/to/directory`
+    これにより、FTPサーバー上の指定したディレクトリに移動することができる。
+    現在のディレクトリを確認するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      pwd
+    \end{lstlisting}
+    これにより、現在のディレクトリのパスが表示される。
+
+    \subsection{ファイルの一覧表示}
+    FTPサーバー上のファイルやディレクトリの一覧を表示するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> ls
+    \end{lstlisting}
+    これにより、現在のディレクトリ内のファイルとディレクトリの一覧が表示される。
+    詳細な情報を表示するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> ls -l
+    \end{lstlisting}
+    これにより、ファイルの詳細情報（パーミッション、所有者、サイズ、最終更新日時など）が表示される。
+
+    \subsection{ファイルの削除}
+    FTPサーバー上のファイルを削除するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      ftp> delete [リモートファイル名]
+    \end{lstlisting}
+    例: `delete remotefile.txt`
+    これにより、指定したリモートファイルがFTPサーバーから削除される。
+    ディレクトリを削除するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      rmdir [リモートディレクトリ名]
+    \end{lstlisting}
+    例: `rmdir /path/to/directory`
+    これにより、指定したリモートディレクトリがFTPサーバーから削除される。
+    ディレクトリが空でない場合は、削除できないため、先にそのディレクトリ内のファイルを削除する必要がある。
+
+    \subsection{FTPセッションの終了}
+    FTPセッションを終了するには、以下のコマンドを使用する。
+    \begin{lstlisting}
+      bye
+    \end{lstlisting}
+    これにより、FTPサーバーからログアウトし、セッションが終了する。
+    または、以下のコマンドを使用しても同様にセッションを終了できる。
+    \begin{lstlisting}
+      quit
     \end{lstlisting}
 
-  \subsection{ディレクトリの監視と同期}
-    ディレクトリAの変更を監視し、変更があった場合にはディレクトリBに同期する。\\
-    inotify-toolsをインストールする。
+\section{FTPのオプション}
+    FTPコマンドには、いくつかのオプションがある。以下に代表的なオプションを示す。
+
+    \subsection{確認メッセージの表示オプション}
+    FTPサーバの処理後のメッセージを表示するかどうかを設定するオプションがある。
+    以下のコマンドを使用して、確認メッセージの表示を有効にすることができる。
     \begin{lstlisting}
-      sudo apt install inotify-tools
+      ftp -v [ホスト名]
     \end{lstlisting}
-    ディレクトリを監視・同期するシェルスクリプトは以下のとおりである。
-    ただし、tmuxなどで実行するほうがよい。
+    例: `ftp -v example.com`
+    これにより、FTPサーバーからの応答メッセージが表示される。
+    逆に、確認メッセージの表示を無効にするには、以下のコマンドを使用する。
     \begin{lstlisting}
-      #!/bin/bash
-      while true; do
-        inotifywait -r -e modify,create,delete /path/to/directoryA/
-        rsync -av --delete/path/to/directoryA/ /path/to/directoryB/
-      done
+      ftp -i [ホスト名]
     \end{lstlisting}
+    例: `ftp -i example.com`
+    これにより、FTPサーバーからの応答メッセージが表示されなくなる。
+
 
 
 \begin{comment}
@@ -184,10 +337,13 @@
     "\textbackslash usepackage\{color\}"でパッケージを読み込み、"\textbackslash textcolor\{文字の色\}\{文字\}"を用いる。文字の色は「red」・「blue」・「green」・「yellow」・「magenta」・「white」・「black」の7色が使える。
 \end{comment}
 
-\begin{comment}
+%\begin{comment}
+% 参考文献の指定
+%\cite{SSHConfig}
 % 参考文献の記述
 \begin{thebibliography}{1}
-  \bibitem{docker} 【入門】Dockerでnginxを動かす手順, カゴヤのサーバ研究室, \url{https://www.kagoya.jp/howto/cloud/container/dockernginx/}
+  \bibitem{Envader} Envaderにて、ftpコマンドを実践しながら学ぶ, @kobakichi(Qiita), \url{https://qiita.com/kobakichi/items/585283d7d78f3c691656}
+  \bibitem{ftpCommand} ftpコマンドについて詳しくまとめました 【Linuxコマンド集】, エンジニアの入り口, \url{https://eng-entrance.com/linux-command-ftp}
 \end{thebibliography}
 %\end{comment}
 
