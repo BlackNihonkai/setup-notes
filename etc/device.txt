@@ -90,3 +90,22 @@ nvidia-smiでGPU名を確認するコマンド
 基本的には-aをつけて詳細を表示する
     $ uname -a
 
+
+############################
+## ハードディスクの修復失敗 ##
+############################
+例えば以下のようなエラーメッセージなどが表示される。
+
+/dev/sda5 contains a file system with errors, check forced.
+~~~ 自動修復を試みた内容が書かれる(?) ~~~
+/dev/sda5: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
+~~~ 自動修復ではうまくいかなかった旨が書かれる ~~~
+
+手動でfsckを使って修復してやる必要がある。
+(initramfs) fsck /dev/sda5
+
+この後はエラー箇所を修復するか聞かれるので、yを投げていく。
+
+
+
+参考資料: https://qiita.com/nanbuwks/items/b17f53fbac9dfdb867f9
