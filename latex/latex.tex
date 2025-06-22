@@ -7,7 +7,7 @@
 \usepackage{bbm}
 \usepackage{comment}
 \usepackage{url}
-\usepackage{listings,jvlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
+\usepackage{listings,jlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
 
 %ここからソースコードの表示に関する設定
 \lstset{
@@ -113,6 +113,8 @@
         \begin{enumerate}
           \item \textcolor{red}{執筆時点での環境では"jvlisting"による日本語コメントアウトが動作しなかった}
           \item "jlisting"なるものをインストールして、適切な場所にファイルを配置すれば、しっかりと日本語のコメントアウトができるらしい(動作未確認)
+          \item 追記：\textcolor{red}{jlistingのインストール元とインストール手段を発見}\cite{InstallPackage}\cite{DownloadJlisting}
+
         \end{enumerate}
       \end{enumerate}
       \item コード\ref{hello_code1}に示されるソースコードの表示に関する設定を"\textbackslash begin\{document\}"の前に記述する
@@ -204,12 +206,6 @@
   \subsection{文字の色}
     "textcolor"を使うことで文字の色を変えることができる。
     "\textbackslash usepackage\{color\}"でパッケージを読み込み、"\textbackslash textcolor\{文字の色\}\{文字\}"を用いる。文字の色は「red」・「blue」・「green」・「yellow」・「magenta」・「white」・「black」の7色が使える。
-
-
-\begin{thebibliography}{1}
-  \bibitem{SouceCode} LaTeXにソースコードを【美しく】貼る方法, \url{https://qiita.com/ta_b0_/items/2619d5927492edbb5b03}
-\end{thebibliography}
-
 
 \begin{comment}
     % 図の挿入
@@ -331,5 +327,14 @@
   \end{center}
 \end{figure}
 \end{comment}
+
+%\begin{comment}
+% 参考文献の記述
+%\end{comment}
+\begin{thebibliography}{1}
+  \bibitem{SouceCode} LaTeXにソースコードを【美しく】貼る方法, \url{https://qiita.com/ta_b0_/items/2619d5927492edbb5b03}
+  \bibitem{InstallPackage} [LaTeX]パッケージを自分でインストールする, @YuH25(Qiita), \url{https://qiita.com/YuH25/items/4fc9847bfd9c662aafa1}
+  \bibitem{DownloadJlisting} jlistingのダウンロード, \url{https://github.com/SquareBracketAssociates/PharoByExample-japanese/blob/master/jlisting.sty}
+\end{thebibliography}
 
 \end{document}
