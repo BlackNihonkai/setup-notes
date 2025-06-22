@@ -7,7 +7,8 @@
 \usepackage{bbm}
 \usepackage{comment}
 \usepackage{url}
-\usepackage{listings,jvlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
+\usepackage{listings, jlisting} % 日本語のコメントアウトをする場合には「jvlisting(もしくはjlisting)」が必要
+\usepackage{xcolor}
 
 %ここからソースコードの表示に関する設定
 \lstset{
@@ -74,8 +75,8 @@
     FTPは、TCP/IPプロトコルを使用して通信を行う。
   \subsection{FTPの注意点}
     FTPは、セキュリティ上の問題があるため、パスワードが平文で送信される。\\
-    \textcolor{grey}{そのため、FTPを使用する際は、セキュリティに注意する必要がある。
-    代替として、SFTP（SSH File Transfer Protocol）やFTPS（FTP Secure）などのセキュアなファイル転送プロトコルを使用することが推奨される。}
+    \textcolor{gray}{そのため、FTPを使用する際は、セキュリティに注意する必要がある。}
+    \textcolor{gray}{代替として、SFTP（SSH File Transfer Protocol）やFTPS（FTP Secure）などのセキュアなファイル転送プロトコルを使用することが推奨される。}
 
 \section{FTPコマンド}
   \subsection{FTPサーバーへの接続}
