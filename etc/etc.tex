@@ -93,6 +93,54 @@
       done
     \end{lstlisting}
 
+\section{グローバルIPの取得}
+  グローバルIPを取得する方法。
+  \begin{lstlisting}
+    curl ipinfo.io
+  \end{lstlisting}
+
+\section{Terminal上に画像を表示する}
+  必要なパッケージをインストールする。
+  \begin{lstlisting}
+    apt install imagemagick git make g++
+  \end{lstlisting}
+  gitからクローンする。
+  \begin{lstlisting}
+    git clone https://github.com/stefanhaustein/TerminalImageViewer.git
+  \end{lstlisting}
+  コンパイルとインストールを行う。
+  \begin{lstlisting}
+    cd TerminalImageViewer/src/main/cpp
+    make
+    make install
+  \end{lstlisting}
+
+\section{IPの固定化}
+  IPアドレスを固定化する方法。
+  \textcolor{red}{ここから要検証。}copilotにより生成された内容。
+  Debian系のLinuxでIPアドレスを固定化するには、以下の手順を実行する。
+  \begin{itemize}
+    \item ネットワークインターフェースの設定ファイルを編集する
+    \item ネットワークサービスを再起動する
+  \end{itemize}
+  具体的な手順は以下のとおりである。  
+  \begin{enumerate}
+    \item \texttt{/etc/network/interfaces}を編集する。
+    \begin{lstlisting}
+      auto eth0
+      iface eth0 inet static
+        address 192.168.1.100
+        netmask 255.255.255.0
+        gateway 192.168.1.1
+    \end{lstlisting}
+    \item \texttt{systemctl restart networking}を実行する。
+  \end{enumerate} 
+  これにより、eth0インターフェースのIPアドレスが192.168.1.100に設定される。
+  \textcolor{red}{注意点として、IPアドレスはネットワーク内で一意である必要がある。}
+  また、ネットマスクとゲートウェイも適切に設定する必要がある。
+  \textcolor{red}{IPアドレスの設定は、ネットワークの構成に依存するため、適切な値を使用する必要がある。
+  また、ネットワークサービスの再起動後にIPアドレスが正しく設定されているかを確認するために、\texttt{ifconfig}や\texttt{ip addr}コマンドを使用して確認することが推奨される。} 
+  \textcolor{red}{ここまでCopilotにより生成された内容。}
 
 \begin{comment}
 \section{LaTeXにソースコードを貼り付ける}
